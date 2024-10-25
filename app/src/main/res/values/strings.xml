@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">decorMiCasa</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="lorem_ipsum">
+        Lorem
+    </string>
+
+    <string name="login_hint_username">Username</string>
+    <string name="login_hint_password">Password</string>
+    <string name="button_next">Next</string>
+    <string name="button_cancel">Previous</string>
+    <string name="dominioservidor">https://damGrupo3.pythonanywhere.com/</string>
+    <string name="error_password">Password must be at least 6 characters long</string>
+    <string name="invalid_username">El nombre de usuario no existe</string>
+    <string name="invalid_password">La contraseña no es correcta</string>
+    <string name="welcome">Welcome</string>
+    <string name="login_failed">Login failed</string>
+
+</resources>
