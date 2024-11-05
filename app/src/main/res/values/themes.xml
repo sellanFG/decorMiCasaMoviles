@@ -2,8 +2,13 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.DecorMiCasa" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/naranja</item>
     </style>
 
     <style name="Theme.DecorMiCasa" parent="Base.Theme.DecorMiCasa" />
+    <style name="CustomButtonStyle">
+        <item name="android:background">@color/primaryBlue</item> <!-- Cambia este a un color específico si lo deseas -->
+        <item name="android:textColor">@color/yellowAccent</item> <!-- Cambia esto si deseas otro color -->
+        <item name="android:padding">8dp</item> <!-- Espaciado del botón -->
+    </style>
 </resources>

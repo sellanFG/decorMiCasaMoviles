@@ -45,4 +45,17 @@ public class ProductEntry {
         this.usos = null;
     }
 
+    public ProductEntry(String nombre, Float precioVenta) {
+        this.idProducto = null;
+        this.nombre = nombre;
+        this.descripcion = null;
+        this.precioCompra = null;
+        this.precioVenta = precioVenta;
+        this.stock = null;
+        this.imagen = null;
+        this.fechaRegistro = null;
+        this.estado = true;
+        this.caracteristicas = null;
+        this.usos = null;
+    }
 }
