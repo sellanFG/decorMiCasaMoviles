@@ -21,5 +21,26 @@
     <string name="invalid_password">La contraseña no es correcta</string>
     <string name="welcome">Welcome</string>
     <string name="login_failed">Login failed</string>
+    <string name="buscar">Buscar</string>
+    <string name="usuario_button_description"> Boton usuario</string>
+    <string name="regresar_button_description"> Botón regresar</string>
+    <string name="carrito_button_description"> Botón carrito</string>
+    <string name="gestionar_categorias">gestionar categorias</string>
+    <string name="inf_categoria">Información de la categoría</string>
+    <string name="cod">Código</string>
+    <string name="nombre">Nombre</string>
+    <string name="desc">Descripción</string>
+    <string name="estado">Estado</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="guardar">Guardar</string>
+    <string name="sel_img">Seleccionar imagen</string>
+    <string name="precio">Precio</string>
+    <string name="lista_productos_fragment_label">Lista de productos</string>
 
+
+    <string name="inicio">"BIENVENDIO A DECOR MI CASA"</string>
+    <string name="categorias">"CATEGORÍAS"</string>
+    <string name="productos">"PRODUCTOS"</string>
+    <string name="empleados">"EMPLEADOS"</string>
+    <string name="marcas">"MARCAS"</string>
 </resources>

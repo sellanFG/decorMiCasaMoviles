@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="primaryBlue">#2D3EBC</color>
+    <color name="yellowAccent">#FFDC20</color>
+    <color name="naranja">#FFA320</color>
+    <color name="switch_thumb">#FFDC20</color>
+    <color name="switch_track">#FFDC20</color>
+    <color name="colorCategorias">#FF5733</color> <!-- Un color personalizado -->
+    <color name="colorProductos">#33FF57</color>
+    <color name="colorMarcas">#3357FF</color>
+    <color name="colorEmpleados">#FF33A8</color>
 </resources>

@@ -16,8 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.decormicasa.AdminActivity;
+import com.example.decormicasa.ClienteActivity;
 import com.example.decormicasa.Interface.decorMiCasaApi;
-import com.example.decormicasa.MainActivity;
 import com.example.decormicasa.R;
 import com.example.decormicasa.databinding.ActivityLoginBinding;
 import com.example.decormicasa.model.AuthRequest;
@@ -108,61 +109,65 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void iniciarSesionPyAny(String username, String password) {
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(getString(R.string.dominioservidor))
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-    decorMiCasaApi decorMiCasaApi = retrofit.create(decorMiCasaApi.class);
-    AuthRequest authRequest = new AuthRequest();
-    authRequest.setUsername(username);
-    authRequest.setPassword(password);
-    Call<AuthResponse> call = decorMiCasaApi.autenticar(authRequest);
-    call.enqueue(new Callback<AuthResponse>() {
-        @Override
-        public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
-            if (!response.isSuccessful()) {
-                Toast.makeText(getApplicationContext(), "Error en la autenticación", Toast.LENGTH_LONG).show();
-                binding.loading.setVisibility(View.INVISIBLE);
-                return;
-            }
-            if (response.code() != 200) {
-                Toast.makeText(getApplicationContext(), "Credenciales incorrectas", Toast.LENGTH_LONG).show();
-                binding.loading.setVisibility(View.INVISIBLE);
-            } else {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(getString(R.string.dominioservidor))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        decorMiCasaApi decorMiCasaApi = retrofit.create(decorMiCasaApi.class);
+        AuthRequest authRequest = new AuthRequest();
+        authRequest.setUsername(username);
+        authRequest.setPassword(password);
+
+        Call<AuthResponse> call = decorMiCasaApi.autenticar(authRequest);
+        call.enqueue(new Callback<AuthResponse>() {
+            @Override
+            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                binding.loading.setVisibility(View.INVISIBLE); // Ocultar cargando siempre que haya respuesta
+
+                if (!response.isSuccessful()) {
+                    Toast.makeText(LoginActivity.this, "Error en la autenticación", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 AuthResponse authResponse = response.body();
+                if (authResponse == null || authResponse.getAccess_token() == null || authResponse.getRol() == null) {
+                    Toast.makeText(LoginActivity.this, "Error: Respuesta no válida", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                // Asignamos token y rol
                 token = authResponse.getAccess_token();
-                loginViewModel.login(username, password);
-                // Creamos el Shared Preferences con el token obtenido
-                SharedPreferences sharedPreferences = getSharedPreferences("SP_APPUSAT", MODE_PRIVATE);
+                String userRole = authResponse.getRol();
+
+                // Guardar token y rol en SharedPreferences
+                SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("tokenJWT", token);
-                editor.commit();
-                // Abrimos la ventana principal (Listado de productos)
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(i);
+                editor.putString("userRole", userRole);
+                editor.apply();
+
+                // Redireccionar según el rol
+                if ("cliente".equalsIgnoreCase(userRole)) {
+                    Intent intent = new Intent(LoginActivity.this, ClienteActivity.class);
+                    startActivity(intent);
+                    finish(); // Finalizar la actividad de inicio de sesión
+                } else if ("administrador".equalsIgnoreCase(userRole)) {
+                    Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+                    startActivity(intent);
+                    finish(); // Finalizar la actividad de inicio de sesión
+                } else {
+                    Toast.makeText(LoginActivity.this, "Rol no reconocido", Toast.LENGTH_LONG).show();
+                }
             }
-        }
 
-        @Override
-public void onFailure(Call<AuthResponse> call, Throwable t) {
-    String errorMessage = "Error de red: " + t.getMessage();
-    int duration = Toast.LENGTH_LONG;
-
-    // Dividir el mensaje en varias líneas si es muy largo
-    if (errorMessage.length() > 200) {
-        duration = Toast.LENGTH_SHORT;
-        String[] parts = errorMessage.split("(?<=\\G.{200})");
-        for (String part : parts) {
-            Toast.makeText(getApplicationContext(), part, duration).show();
-        }
-    } else {
-        Toast.makeText(getApplicationContext(), errorMessage, duration).show();
+            @Override
+            public void onFailure(Call<AuthResponse> call, Throwable t) {
+                binding.loading.setVisibility(View.INVISIBLE);
+                Toast.makeText(LoginActivity.this, "Error de red: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
-    binding.loading.setVisibility(View.INVISIBLE);
-}
-    });
-}
 
     private void updateUiWithUser(LoggedInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
