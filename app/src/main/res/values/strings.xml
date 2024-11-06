@@ -38,7 +38,7 @@
     <string name="lista_productos_fragment_label">Lista de productos</string>
 
 
-    <string name="inicio">"BIENVENDIO A DECOR MI CASA"</string>
+    <string name="inicio">"BIENVENIDO A DECOR MI CASA"</string>
     <string name="categorias">"CATEGORÍAS"</string>
     <string name="productos">"PRODUCTOS"</string>
     <string name="empleados">"EMPLEADOS"</string>
