@@ -35,6 +35,9 @@
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.DecorMiCasa" />
+        <activity
+            android:name=".CategoriasActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
