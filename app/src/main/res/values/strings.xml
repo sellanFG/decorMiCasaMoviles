@@ -38,9 +38,17 @@
     <string name="lista_productos_fragment_label">Lista de productos</string>
 
 
-    <string name="inicio">"BIENVENDIO A DECOR MI CASA"</string>
+    <string name="inicio">"BIENVENIDO A DECOR MI CASA"</string>
     <string name="categorias">"CATEGORÍAS"</string>
     <string name="productos">"PRODUCTOS"</string>
     <string name="empleados">"EMPLEADOS"</string>
     <string name="marcas">"MARCAS"</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string-array name="estado_producto">
+        <item>Activo</item>
+        <item>Inactivo</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

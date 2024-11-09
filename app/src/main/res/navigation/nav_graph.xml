@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/listaProductosFragment">
+
     <fragment
         android:id="@+id/listaProductosFragment"
         android:name="com.example.decormicasa.ListaProductosFragment"
@@ -12,6 +13,8 @@
             android:id="@+id/action_ListaProductosFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
+
+    <!-- Fragmento de First -->
     <fragment
         android:id="@+id/FirstFragment"
         android:name="com.example.decormicasa.FirstFragment"
@@ -21,6 +24,7 @@
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/SecondFragment"
         android:name="com.example.decormicasa.SecondFragment"
