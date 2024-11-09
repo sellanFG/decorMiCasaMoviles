@@ -29,6 +29,7 @@ public class CrudProductosFragment extends Fragment {
     private RecyclerView recyclerView;
     private ProductosAdapter adapter;
     private List<ProductRequest> productos;
+    private Button btnRegistrarProducto;
 
     @Nullable
     @Override
@@ -54,6 +55,19 @@ public class CrudProductosFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         obtenerProductos(api, token);
+
+        btnRegistrarProducto = view.findViewById(R.id.btnRegistrarProducto);
+        btnRegistrarProducto.setOnClickListener(v -> {
+            try {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new RegistrarProductoFragment())
+                        .addToBackStack(null)
+                        .commit();
+            } catch (Exception e) {
+                Log.e("CrudProductosFragment", "Error al abrir RegistrarProductoFragment", e);
+                Toast.makeText(getContext(), "Error al abrir el registro de producto", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }

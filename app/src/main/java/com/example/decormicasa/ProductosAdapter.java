@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,8 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
     public ProductoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_producto, parent, false);
         return new ProductoViewHolder(view);
+
+
     }
 
     @Override
