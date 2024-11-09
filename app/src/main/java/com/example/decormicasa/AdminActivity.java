@@ -17,7 +17,6 @@ public class AdminActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
 
-        // Cambiar el tipo de ImageButton a MaterialButton
         MaterialButton btnProductos = findViewById(R.id.btnProductos);
         View gridOptions = findViewById(R.id.gridOptions);
         View fragmentContainer = findViewById(R.id.fragment_container);
@@ -27,25 +26,22 @@ public class AdminActivity extends AppCompatActivity {
             return;
         }
 
-        // Agregar evento de clic para el botón de productos
         btnProductos.setOnClickListener(v -> {
             Log.d(TAG, "Botón de productos clickeado");
-            gridOptions.setVisibility(View.GONE); // Ocultar los botones
-            fragmentContainer.setVisibility(View.VISIBLE); // Mostrar el contenedor del fragmento
+            gridOptions.setVisibility(View.GONE);
+            fragmentContainer.setVisibility(View.VISIBLE);
 
-            // Transacción para reemplazar el fragmento
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, new CrudProductosFragment());
-            transaction.addToBackStack(null); // Agrega a la pila para retroceso
+            transaction.addToBackStack(null);
             transaction.commit();
         });
 
-        // Listener para manejar el retroceso en la pila de fragmentos
         getSupportFragmentManager().addOnBackStackChangedListener(() -> {
             Log.d(TAG, "Back stack changed: " + getSupportFragmentManager().getBackStackEntryCount());
             if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-                gridOptions.setVisibility(View.VISIBLE); // Volver a mostrar los botones
-                fragmentContainer.setVisibility(View.GONE); // Ocultar el fragmento
+                gridOptions.setVisibility(View.VISIBLE);
+                fragmentContainer.setVisibility(View.GONE);
             }
         });
     }

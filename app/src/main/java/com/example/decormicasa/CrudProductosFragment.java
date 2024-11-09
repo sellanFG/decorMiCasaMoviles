@@ -28,12 +28,15 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+
 public class CrudProductosFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private ProductosAdapter adapter;
     private Button btnRegistrarProducto;
     private List<ProductRequest> productos;
+    private decorMiCasaApi api;
+    private String token;
 
     @Nullable
     @Override
@@ -44,16 +47,22 @@ public class CrudProductosFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         productos = new ArrayList<>();
-        adapter = new ProductosAdapter(productos);
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(getString(R.string.dominioservidor))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        api = retrofit.create(decorMiCasaApi.class);
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+        token = sharedPreferences.getString("tokenJWT", "");
+
+        adapter = new ProductosAdapter(productos, api, getContext(), token);
         recyclerView.setAdapter(adapter);
 
         btnRegistrarProducto = view.findViewById(R.id.btnRegistrarProducto);
-
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString("tokenJWT", "");
-
-        obtenerProductos(token);
-
         btnRegistrarProducto.setOnClickListener(v -> {
             try {
                 requireActivity().getSupportFragmentManager().beginTransaction()
@@ -66,41 +75,34 @@ public class CrudProductosFragment extends Fragment {
             }
         });
 
+        obtenerProductos();
+
         return view;
     }
 
-    private void obtenerProductos(String tokenJWT) {
-        if (tokenJWT == null || tokenJWT.isEmpty()) {
+    private void obtenerProductos() {
+        if (token == null || token.isEmpty()) {
             Toast.makeText(getContext(), "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(getString(R.string.dominioservidor))
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
-
-        Call<List<ProductRequest>> call = api.obtenerproductos("JWT " + tokenJWT);
+        Call<List<ProductRequest>> call = api.obtenerproductos("JWT " + token);
         call.enqueue(new Callback<List<ProductRequest>>() {
             @Override
             public void onResponse(@NonNull Call<List<ProductRequest>> call, @NonNull Response<List<ProductRequest>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     productos.clear();
+
                     productos.addAll(response.body());
                     adapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(getContext(), "Error al cargar productos", Toast.LENGTH_SHORT).show();
-                    Log.e("CrudProductosFragment", "Error en la respuesta: " + response.message());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<ProductRequest>> call, @NonNull Throwable t) {
-                // Si falla la solicitud a la API
                 Toast.makeText(getContext(), "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
-                Log.e("CrudProductosFragment", "Error en la conexión", t);
             }
         });
     }

@@ -2,30 +2,62 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="8dp"
     android:background="@android:color/white"
     android:layout_marginBottom="8dp"
     android:elevation="2dp">
 
-    <TextView
-        android:id="@+id/textNombre"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Nombre del Producto"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:layout_weight="1"
+        android:paddingEnd="8dp">
 
-    <TextView
-        android:id="@+id/textPrecioCompra"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Precio de Compra: $0.0" />
+        <TextView
+            android:id="@+id/textNombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre del Producto"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/textPrecioVenta"
+        <TextView
+            android:id="@+id/textPrecioCompra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Precio de Compra: $0.0" />
+
+        <TextView
+            android:id="@+id/textPrecioVenta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Precio de Venta: $0.0" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Precio de Venta: $0.0" />
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/btnEditar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_edit"
+            android:contentDescription="Editar Producto"
+            android:background="?android:attr/selectableItemBackgroundBorderless" />
+
+        <ImageButton
+            android:id="@+id/btnEliminar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_delete"
+            android:contentDescription="Eliminar Producto"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
 
 </LinearLayout>
