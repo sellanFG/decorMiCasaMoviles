@@ -45,4 +45,10 @@
     <string name="marcas">"MARCAS"</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string-array name="estado_producto">
+        <item>Activo</item>
+        <item>Inactivo</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

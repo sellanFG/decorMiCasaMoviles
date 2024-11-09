@@ -11,7 +11,7 @@ public class ProductRequest {
     private Integer stock;
     private String imagen;
     private Date fechaRegistro;
-    private boolean estado;
+    private String estado;
     private String caracteristicas;
     private String usos;
     private Integer idMarca;
@@ -48,7 +48,7 @@ public class ProductRequest {
         return fechaRegistro;
     }
 
-    public boolean isEstado() {
+    public String isEstado() {
         return estado;
     }
 
@@ -64,4 +64,17 @@ public class ProductRequest {
         return idMarca;
     }
 
+    public ProductRequest(String nombre, String descripcion, Float precioCompra, Float precioVenta, Integer stock,
+                          String imagen, String estado, String caracteristicas, String usos, Integer idMarca) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precioCompra = precioCompra;
+        this.precioVenta = precioVenta;
+        this.stock = stock;
+        this.imagen = imagen;
+        this.estado = estado;
+        this.caracteristicas = caracteristicas;
+        this.usos = usos;
+        this.idMarca = idMarca;
+    }
 }

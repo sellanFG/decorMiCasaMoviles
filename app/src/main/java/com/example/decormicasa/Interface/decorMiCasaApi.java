@@ -18,7 +18,9 @@ public interface decorMiCasaApi {
     Call<AuthResponse> autenticar(@Body AuthRequest authRequest);
 
 
-    @GET("api_obtenerdproductos")
+    @GET("api_obtenerproductos")
     Call<List<ProductRequest>> obtenerproductos(@Header("Authorization") String authorization);
 
+    @POST("registrarProducto")
+    Call<Void> registrarProducto(@Body ProductRequest nuevoProducto);
 }
