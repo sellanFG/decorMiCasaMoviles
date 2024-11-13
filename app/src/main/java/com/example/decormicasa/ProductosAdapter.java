@@ -7,11 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.example.decormicasa.Interface.decorMiCasaApi;
 import com.example.decormicasa.model.ProductRequest;
 import java.util.List;
@@ -25,14 +28,14 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
     private decorMiCasaApi api;
     private Context context;
     private String token;
-    private FragmentManager fragmentManager;  // Añade el FragmentManager
-    // Constructor modificado para aceptar api, contexto, y token
+    private FragmentManager fragmentManager;
+
     public ProductosAdapter(List<ProductRequest> productos, decorMiCasaApi api, Context context, String token, FragmentManager fragmentManager) {
         this.productos = productos;
         this.api = api;
         this.context = context;
         this.token = token;
-        this.fragmentManager = fragmentManager;  // Guarda el FragmentManager
+        this.fragmentManager = fragmentManager;
     }
 
     @NonNull
@@ -53,9 +56,13 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
         holder.textPrecioVenta.setText("Precio de Venta: $" + producto.getPrecioVenta());
         holder.textDescripcion.setText(producto.getDescripcion());
 
+        Glide.with(context)
+                .load(producto.getImagen())  // URL de la imagen
+                .placeholder(R.drawable.loading_image)
+                .error(R.drawable.default_image)
+                .into(holder.imageProducto);
+
         holder.btnEliminar.setOnClickListener(v -> eliminarProducto(position, producto.getIdProducto()));
-
-
         holder.btnEditar.setOnClickListener(v -> {
             EditarProductoFragment editarFragment = EditarProductoFragment.newInstance(producto);
 
@@ -114,13 +121,14 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
     public static class ProductoViewHolder extends RecyclerView.ViewHolder {
         TextView textNombre, textPrecioCompra, textPrecioVenta, textDescripcion;
         ImageButton btnEliminar, btnEditar;
-
+        ImageView imageProducto;
         public ProductoViewHolder(@NonNull View itemView) {
             super(itemView);
             textNombre = itemView.findViewById(R.id.textNombre);
             textPrecioCompra = itemView.findViewById(R.id.textPrecioCompra);
             textPrecioVenta = itemView.findViewById(R.id.textPrecioVenta);
             textDescripcion = itemView.findViewById(R.id.textDescripcion);
+            imageProducto = itemView.findViewById(R.id.imageProducto);
             btnEliminar = itemView.findViewById(R.id.btnEliminar);
             btnEditar = itemView.findViewById(R.id.btnEditar);
         }
