@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -138,12 +139,15 @@ public class LoginActivity extends AppCompatActivity {
                 // Asignamos token y rol
                 token = authResponse.getAccess_token();
                 String userRole = authResponse.getRol();
+                int id = authResponse.getId();
 
                 // Guardar token y rol en SharedPreferences
                 SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("tokenJWT", token);
                 editor.putString("userRole", userRole);
+                editor.putInt("id_cliente", id);
+                Log.e("ID", String.valueOf(id));
                 editor.apply();
 
                 // Redireccionar según el rol

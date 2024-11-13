@@ -9,34 +9,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.decormicasa.Interface.decorMiCasaApi;
 import com.example.decormicasa.model.ProductRequest;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-
 public class CrudProductosFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private ProductosAdapter adapter;
-    private Button btnRegistrarProducto;
     private List<ProductRequest> productos;
-    private decorMiCasaApi api;
-    private String token;
+    private Button btnRegistrarProducto;
 
     @Nullable
     @Override
@@ -48,19 +41,20 @@ public class CrudProductosFragment extends Fragment {
 
         productos = new ArrayList<>();
 
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("tokenJWT", "");
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(getString(R.string.dominioservidor))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        api = retrofit.create(decorMiCasaApi.class);
-
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
-        token = sharedPreferences.getString("tokenJWT", "");
+        decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
 
         adapter = new ProductosAdapter(productos, api, getContext(), token);
         recyclerView.setAdapter(adapter);
+
+        obtenerProductos(api, token);
 
         btnRegistrarProducto = view.findViewById(R.id.btnRegistrarProducto);
         btnRegistrarProducto.setOnClickListener(v -> {
@@ -75,24 +69,21 @@ public class CrudProductosFragment extends Fragment {
             }
         });
 
-        obtenerProductos();
-
         return view;
     }
 
-    private void obtenerProductos() {
-        if (token == null || token.isEmpty()) {
+    private void obtenerProductos(decorMiCasaApi api, String tokenJWT) {
+        if (tokenJWT == null || tokenJWT.isEmpty()) {
             Toast.makeText(getContext(), "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        Call<List<ProductRequest>> call = api.obtenerproductos("JWT " + token);
+        Call<List<ProductRequest>> call = api.obtenerproductos("JWT " + tokenJWT);
         call.enqueue(new Callback<List<ProductRequest>>() {
             @Override
             public void onResponse(@NonNull Call<List<ProductRequest>> call, @NonNull Response<List<ProductRequest>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     productos.clear();
-
                     productos.addAll(response.body());
                     adapter.notifyDataSetChanged();
                 } else {

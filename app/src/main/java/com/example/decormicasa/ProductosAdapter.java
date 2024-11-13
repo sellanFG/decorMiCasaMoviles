@@ -1,18 +1,19 @@
 package com.example.decormicasa;
+
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.decormicasa.Interface.decorMiCasaApi;
 import com.example.decormicasa.model.ProductRequest;
 import java.util.List;
-import android.content.Context;
-import android.widget.Toast;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,14 +22,15 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
 
     private List<ProductRequest> productos;
     private decorMiCasaApi api;
-    private Context context;  // Agregamos el contexto para mostrar mensajes Toast
-    private String tokenJWT;
+    private Context context;
+    private String token;
 
-    public ProductosAdapter(List<ProductRequest> productos, decorMiCasaApi api, Context context, String tokenJWT) {
+    // Constructor modificado para aceptar api, contexto, y token
+    public ProductosAdapter(List<ProductRequest> productos, decorMiCasaApi api, Context context, String token) {
         this.productos = productos;
         this.api = api;
         this.context = context;
-        this.tokenJWT = tokenJWT;
+        this.token = token;
     }
 
     @NonNull
@@ -36,32 +38,35 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
     public ProductoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_producto, parent, false);
         return new ProductoViewHolder(view);
+
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull ProductoViewHolder holder, int position) {
         ProductRequest producto = productos.get(position);
 
+        Log.d("ProductosAdapter", "ID del producto en posición " + position + ": " + producto.getIdProducto());
+
         holder.textNombre.setText(producto.getNombre());
         holder.textPrecioCompra.setText("Precio de Compra: $" + producto.getPrecioCompra());
         holder.textPrecioVenta.setText("Precio de Venta: $" + producto.getPrecioVenta());
 
-        holder.btnEditar.setOnClickListener(v -> {
-            Log.d("ProductosAdapter", "Editar: " + producto.getNombre());
-        });
-
-        holder.btnEliminar.setOnClickListener(v -> {
-            Integer idProducto = producto.getIdProducto();
-            if (idProducto != null) {
-                eliminarProducto(idProducto, position);
-            } else {
-                Toast.makeText(context, "ID de producto no válido", Toast.LENGTH_SHORT).show();
-            }
-        });
+        holder.btnEliminar.setOnClickListener(v -> eliminarProducto(position, producto.getIdProducto()));
     }
 
-    private void eliminarProducto(int idProducto, int position) {
-        // Llamada DELETE a la API para eliminar el producto
+
+    @Override
+    public int getItemCount() {
+        return productos.size();
+    }
+
+    private void eliminarProducto(int position, Integer idProducto) {
+        if (idProducto == null) {
+            Toast.makeText(context, "ID del producto no válido", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Call<Void> call = api.eliminarProducto(idProducto);
         call.enqueue(new Callback<Void>() {
             @Override
@@ -71,37 +76,30 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
                     notifyItemRemoved(position);
                     Toast.makeText(context, "Producto eliminado", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context, "Error al eliminar el producto", Toast.LENGTH_LONG).show();
+                    // Imprime detalles de la respuesta
+                    Log.d("ProductosAdapter", "Error al eliminar producto: " + response.code() + " - " + response.message());
+                    Toast.makeText(context, "Error al eliminar producto", Toast.LENGTH_SHORT).show();
                 }
             }
 
+
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(context, "Error en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Error en la conexión", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-
-    @Override
-    public int getItemCount() {
-        return productos.size();
-    }
-
     public static class ProductoViewHolder extends RecyclerView.ViewHolder {
         TextView textNombre, textPrecioCompra, textPrecioVenta;
-        ImageButton btnEditar, btnEliminar;
+        ImageButton btnEliminar;
 
         public ProductoViewHolder(@NonNull View itemView) {
             super(itemView);
             textNombre = itemView.findViewById(R.id.textNombre);
             textPrecioCompra = itemView.findViewById(R.id.textPrecioCompra);
             textPrecioVenta = itemView.findViewById(R.id.textPrecioVenta);
-            btnEditar = itemView.findViewById(R.id.btnEditar);
             btnEliminar = itemView.findViewById(R.id.btnEliminar);
         }
     }
 }
-
-
-
