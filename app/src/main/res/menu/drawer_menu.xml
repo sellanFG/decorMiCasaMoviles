@@ -4,11 +4,16 @@
         android:id="@+id/nav_categorias"
         android:title="Categorías"
         android:icon="@drawable/ic_categorias" />
+    <!-- Elemento del menú que redirige a la página de "Nosotros" -->
+    <item
+        android:id="@+id/nav_nosotros"
+        android:icon="@drawable/baseline_info_24"
+        android:title="Nosotros" />
 
+    <!-- Puedes agregar más elementos aquí -->
     <item
         android:id="@+id/nav_home"
+        android:icon="@drawable/baseline_home_24"
         android:title="Inicio" />
-    <item
-        android:id="@+id/nav_settings"
-        android:title="Configuración" />
+
 </menu>

@@ -48,6 +48,8 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
+    implementation (libs.glide)
+    annotationProcessor (libs.compiler)
     //libreria de swip refresh layout
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }

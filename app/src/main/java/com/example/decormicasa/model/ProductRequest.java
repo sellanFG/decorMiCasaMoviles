@@ -1,8 +1,8 @@
 package com.example.decormicasa.model;
-
+import java.io.Serializable;
 import java.util.Date;
 
-public class ProductRequest {
+public class ProductRequest implements Serializable {
     private Integer idProducto;
     private String nombre;
     private String descripcion;
@@ -48,7 +48,7 @@ public class ProductRequest {
         return fechaRegistro;
     }
 
-    public String isEstado() {
+    public String getEstado() {
         return estado;
     }
 

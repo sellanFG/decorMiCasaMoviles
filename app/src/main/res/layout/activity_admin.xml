@@ -71,7 +71,7 @@
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/usuario_button_description"
-                android:src="@drawable/baseline_person_24" />
+                android:src="@drawable/ic_cerrar_sesion" />
         </LinearLayout>
 
         <LinearLayout

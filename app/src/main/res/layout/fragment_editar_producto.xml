@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".RegistrarProductoFragment">
 
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -131,34 +132,26 @@
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Contenedor horizontal para los botones -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center"
+                android:gravity="center_horizontal"
                 android:layout_marginTop="16dp">
 
-                <!-- Botón Volver -->
-                <Button
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEditar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="Editar" />
+
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnVolver"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Volver"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/rounded_button"
-                    android:textColor="@android:color/white"/>
-
-                <!-- Botón Registrar -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnRegistrar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Registrar Producto"
-                    android:background="@drawable/rounded_button"
-                    android:textColor="@android:color/white" />
+                    android:text="Volver" />
             </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
