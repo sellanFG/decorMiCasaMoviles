@@ -14,8 +14,8 @@
     
     <ImageView
         android:id="@+id/imgLogo"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_marginTop="96dp"
         android:src="@drawable/decor_logo"
         app:layout_constraintTop_toTopOf="parent"
@@ -47,6 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
+            android:text="c@cliente.com"
+            android:textColor="@color/WhiteSmoke"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -64,6 +66,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
+            android:textColor="@color/WhiteSmoke"
+            android:text="holamundo"
+            android:layout_marginBottom="20dp"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
