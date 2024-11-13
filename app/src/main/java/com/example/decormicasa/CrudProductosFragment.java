@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,13 +32,13 @@ public class CrudProductosFragment extends Fragment {
     private RecyclerView recyclerView;
     private ProductosAdapter adapter;
     private List<ProductRequest> productos;
-    private Button btnRegistrarProducto;
+    private Button btnRegistrarProducto, btnVolver;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_crud_productos, container, false);
-
+        btnVolver = view.findViewById(R.id.btnVolver);
         recyclerView = view.findViewById(R.id.recyclerViewProductos);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -65,7 +66,7 @@ public class CrudProductosFragment extends Fragment {
 
         obtenerProductos(api, token);
 
-        btnRegistrarProducto = view.findViewById(R.id.btnRegistrarProducto);
+        AppCompatImageButton btnRegistrarProducto = view.findViewById(R.id.btnRegistrarProducto);
         btnRegistrarProducto.setOnClickListener(v -> {
             try {
                 requireActivity().getSupportFragmentManager().beginTransaction()
@@ -77,7 +78,7 @@ public class CrudProductosFragment extends Fragment {
                 Toast.makeText(getContext(), "Error al abrir el registro de producto", Toast.LENGTH_SHORT).show();
             }
         });
-
+        btnVolver.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
         return view;
     }
 
