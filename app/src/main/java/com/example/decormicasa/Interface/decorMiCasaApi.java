@@ -9,6 +9,8 @@ import com.example.decormicasa.model.MarcaRequest;
 import com.example.decormicasa.model.PedidoRequest;
 import com.example.decormicasa.model.ProductRequest;
 import com.example.decormicasa.model.ProductoClienteRequest;
+import com.example.decormicasa.model.User;
+import com.example.decormicasa.model.UserResponse;
 
 import java.util.List;
 
@@ -58,4 +60,9 @@ public interface decorMiCasaApi {
                                             @Field("metodoPago") String metodoPago,
                                             @Field("detalleVenta") String detalleVenta
     );
+
+    public interface ApiService {
+        @POST("register")
+        Call<UserResponse> registerUser(@Body User user);
+    }
 }
