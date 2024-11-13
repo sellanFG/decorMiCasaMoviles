@@ -2,12 +2,14 @@ package com.example.decormicasa;
 
 import static java.security.AccessController.getContext;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,6 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.decormicasa.Interface.decorMiCasaApi;
+import com.example.decormicasa.login.LoginActivity;
 import com.example.decormicasa.model.CategoriaRequest;
 import com.example.decormicasa.model.MarcaRequest;
 import com.example.decormicasa.model.PedidoRequest;
@@ -58,6 +61,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import android.widget.PopupMenu;
+
 
 public class ClienteActivity extends AppCompatActivity {
 
@@ -288,7 +293,79 @@ public class ClienteActivity extends AppCompatActivity {
             }
         });
 
+        // Inicializar el botón de usuario
+        ImageButton btnUsuario = findViewById(R.id.btnUsuario);
+
+// Configurar el PopupMenu para el botón de usuario
+        btnUsuario.setOnClickListener(view -> {
+            // Crear el PopupMenu anclado al botón de usuario
+            PopupMenu popupMenu = new PopupMenu(ClienteActivity.this, view);
+            popupMenu.setGravity(Gravity.END); // Desplegar desde el lado derecho
+            popupMenu.getMenuInflater().inflate(R.menu.menu_usuario, popupMenu.getMenu());
+
+            // Forzar la visualización de íconos en el PopupMenu
+            try {
+                java.lang.reflect.Field popup = PopupMenu.class.getDeclaredField("mPopup");
+                popup.setAccessible(true);
+                Object menuHelper = popup.get(popupMenu);
+                Class<?> classPopupHelper = Class.forName(menuHelper.getClass().getName());
+                java.lang.reflect.Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+                setForceIcons.invoke(menuHelper, true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Manejar las opciones del menú
+            popupMenu.setOnMenuItemClickListener(item -> {
+                int id = item.getItemId();
+
+                if (id == R.id.opcion_editar) {
+                    // Aquí abre la actividad o diálogo para editar usuario
+                    Toast.makeText(ClienteActivity.this, "Editar Usuario", Toast.LENGTH_SHORT).show();
+                    // Aquí podrías abrir una nueva actividad o un diálogo para editar el usuario
+                    return true;
+                } else if (id == R.id.opcion_cerrar_sesion) {
+                    // Aquí añade la lógica para cerrar sesión
+                    Toast.makeText(ClienteActivity.this, "Cerrar Sesión", Toast.LENGTH_SHORT).show();
+                    cerrarSesion();
+                    return true;
+                }
+                return false;
+            });
+            popupMenu.show();
+        });
+
+
     }
+
+    private void cerrarSesion() {
+        // Mostrar el diálogo de confirmación
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Usuario")
+                .setMessage("¿Estás seguro que deseas cerrar sesión?")
+                .setPositiveButton("Cerrar sesión", (dialog, which) -> {
+                    // Aquí se ejecuta el cierre de sesión al confirmar
+                    SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.clear();
+                    editor.apply();
+
+                    // Redirigir al usuario a la pantalla de inicio de sesión
+                    Intent intent = new Intent(ClienteActivity.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+                })
+                .setNegativeButton("Cancelar", (dialog, which) -> {
+                    dialog.dismiss(); // Cerrar el diálogo sin hacer nada
+                });
+
+        // Mostrar el cuadro de diálogo
+        builder.create().show();
+    }
+
+
+
 
     @Override
     public void onBackPressed() {
