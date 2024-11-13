@@ -65,4 +65,14 @@ public interface decorMiCasaApi {
                                             @Field("metodoPago") String metodoPago,
                                             @Field("detalleVenta") String detalleVenta
     );
+
+
+    @FormUrlEncoded
+    @POST("register_admin")
+    Call<Void> registrarAdmin(@Header("Authorization") String authorization,
+                              @Field("nombre") String nombre,
+                              @Field("email") String email,
+                              @Field("password") String password,
+                              @Field("direccion") String direccion,
+                              @Field("telefono") String telefono);
 }
