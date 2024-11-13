@@ -117,6 +117,12 @@ public class ClienteActivity extends AppCompatActivity {
                     startActivity(intent);
                     drawerLayout.closeDrawer(GravityCompat.START);
                     return true;
+                } else if (id == R.id.nav_nosotros) {
+                    Intent intent = new Intent(ClienteActivity.this, NosotrosActivity.class);
+                    startActivity(intent);
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    return true;
+
                 }
 
                 return false;
