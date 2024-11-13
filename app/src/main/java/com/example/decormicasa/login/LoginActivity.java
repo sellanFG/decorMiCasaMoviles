@@ -21,6 +21,7 @@ import com.example.decormicasa.AdminActivity;
 import com.example.decormicasa.ClienteActivity;
 import com.example.decormicasa.Interface.decorMiCasaApi;
 import com.example.decormicasa.R;
+import com.example.decormicasa.RegisterActivity;
 import com.example.decormicasa.databinding.ActivityLoginBinding;
 import com.example.decormicasa.model.AuthRequest;
 import com.example.decormicasa.model.AuthResponse;
@@ -101,6 +102,15 @@ public class LoginActivity extends AppCompatActivity {
                     passwordTextInputMDC.setError(null); //Clear the error
                 }
                 return false;
+            }
+        });
+
+        cancelButtonMDC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Inicia RegisterActivity cuando se hace clic en el botón de registro
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
     }
