@@ -12,6 +12,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface decorMiCasaApi {
@@ -23,8 +24,14 @@ public interface decorMiCasaApi {
     @GET("api_obtenerproductos")
     Call<List<ProductRequest>> obtenerproductos(@Header("Authorization") String authorization);
 
+    @GET("ruta/obtenerProducto/{id}")
+    Call<ProductRequest> obtenerProductoPorId(@Path("id") int idProducto);
+
     @POST("registrarProducto")
     Call<Void> registrarProducto(@Body ProductRequest nuevoProducto);
+
+    @POST("editarProducto/{id}")
+    Call<Void> editarProducto(@Path("id") int id, @Body ProductRequest producto);
 
     @DELETE("eliminarProducto/{id}")
     Call<Void> eliminarProducto(@Path("id") int id);
