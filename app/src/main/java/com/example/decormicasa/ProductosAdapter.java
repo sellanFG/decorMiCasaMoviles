@@ -57,7 +57,7 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
         holder.textDescripcion.setText(producto.getDescripcion());
 
         Glide.with(context)
-                .load(producto.getImagen())  // URL de la imagen
+                .load(producto.getImagen())
                 .placeholder(R.drawable.loading_image)
                 .error(R.drawable.default_image)
                 .into(holder.imageProducto);

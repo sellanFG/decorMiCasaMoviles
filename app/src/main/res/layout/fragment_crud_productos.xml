@@ -9,18 +9,30 @@
         android:id="@+id/recyclerViewProductos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/btnRegistrarProducto"
+        android:layout_above="@id/btnVolver"
         android:paddingBottom="16dp" />
 
-    <!-- Botón de Registrar -->
+    <!-- Botón de Volver -->
     <Button
+        android:id="@+id/btnVolver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="16dp"
+        android:text="Volver"
+        android:textColor="@android:color/white"
+        android:background="@drawable/rounded_button" />
+
+    <!-- Botón de Registrar Producto -->
+    <ImageButton
         android:id="@+id/btnRegistrarProducto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
-        android:text="Nuevo Producto"
-        android:textColor="@android:color/white"
+        android:src="@drawable/ic_add"
+        android:contentDescription="Registrar nuevo producto"
         android:background="@drawable/rounded_button" />
 </RelativeLayout>

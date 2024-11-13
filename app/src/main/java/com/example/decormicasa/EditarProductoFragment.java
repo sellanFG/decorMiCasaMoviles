@@ -76,7 +76,6 @@ public class EditarProductoFragment extends Fragment {
         btnEditar = view.findViewById(R.id.btnEditar);
         btnVolver = view.findViewById(R.id.btnVolver);
 
-        // Si el producto es válido, llena los campos con los datos
         if (getArguments() != null) {
             ProductRequest producto = (ProductRequest) getArguments().getSerializable("producto");
             if (producto != null) {
@@ -84,10 +83,8 @@ public class EditarProductoFragment extends Fragment {
             }
         }
 
-        // Acción del botón para editar el producto
         btnEditar.setOnClickListener(v -> editarProducto(idProducto));
 
-        // Configura el botón de volver
         btnVolver.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
         return view;
