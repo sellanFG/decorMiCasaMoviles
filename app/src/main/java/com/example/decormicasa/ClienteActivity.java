@@ -303,6 +303,17 @@ public class ClienteActivity extends AppCompatActivity {
             popupMenu.setGravity(Gravity.END); // Desplegar desde el lado derecho
             popupMenu.getMenuInflater().inflate(R.menu.menu_usuario, popupMenu.getMenu());
 
+            // Forzar la visualización de íconos en el PopupMenu
+            try {
+                java.lang.reflect.Field popup = PopupMenu.class.getDeclaredField("mPopup");
+                popup.setAccessible(true);
+                Object menuHelper = popup.get(popupMenu);
+                Class<?> classPopupHelper = Class.forName(menuHelper.getClass().getName());
+                java.lang.reflect.Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+                setForceIcons.invoke(menuHelper, true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             // Manejar las opciones del menú
             popupMenu.setOnMenuItemClickListener(item -> {
