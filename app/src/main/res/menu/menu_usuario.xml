@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/opcion_editar"
+        android:icon="@drawable/baseline_person_24"
+        android:title="Editar Usuario" />
+    <item
+        android:id="@+id/opcion_cerrar_sesion"
+        android:icon="@drawable/ic_cerrar_sesion"
+        android:title="Cerrar Sesión" />
+</menu>
