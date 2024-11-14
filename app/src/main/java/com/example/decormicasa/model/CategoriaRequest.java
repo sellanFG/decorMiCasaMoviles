@@ -1,10 +1,13 @@
 package com.example.decormicasa.model;
 
 
-public class CategoriaRequest {
+import java.io.Serializable;
+
+public class CategoriaRequest implements Serializable {
     private int idCategoria;
     private String nombre;
     private String descripcion;
+    public String imagen;
 
     public int getIdCategoria() {
         return idCategoria;
@@ -28,5 +31,13 @@ public class CategoriaRequest {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+    public String getImagen() {
+        return imagen;
+    }
+    public CategoriaRequest(String nombre, String descripcion, String imagen) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.imagen = imagen;
     }
 }

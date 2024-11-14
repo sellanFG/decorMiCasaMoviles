@@ -46,6 +46,13 @@ public interface decorMiCasaApi {
 
     @GET("api_obtenercategorias")
     Call<List<CategoriaRequest>> obtenercategorias(@Header("Authorization") String authorization);
+    @POST("categorias")
+    Call<Void> registrarCategoria(@Body CategoriaRequest categoria);
+    @PUT("editar_categorias/{id}")
+    Call<Void> actualizarCategoria(@Path("id") int id, @Body CategoriaRequest categoria);
+
+    @DELETE("eliminar_categorias/{id}")
+    Call<Void> eliminarCategoria(@Path("id") int id);
 
     @GET("api_obtenermarcas")
     Call<List<MarcaRequest>> obtenermarcas(@Header("Authorization") String authorization);

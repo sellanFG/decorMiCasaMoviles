@@ -71,7 +71,26 @@ public class AdminActivity extends AppCompatActivity {
 
             builder.create().show();
         });
+        MaterialButton btnCategorias = findViewById(R.id.btnCategorias);
+
+
+        if (btnCategorias == null || gridOptions == null || fragmentContainer == null) {
+            Log.e(TAG, "Error al obtener las vistas");
+            return;
+        }
+
+        btnCategorias.setOnClickListener(v -> {
+            Log.d(TAG, "Botón de Categorias clickeado");
+            gridOptions.setVisibility(View.GONE);
+            fragmentContainer.setVisibility(View.VISIBLE);
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, new CrudCategoriasFragment());
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
     }
+
     private void cerrarSesion() {
         Intent intent = new Intent(this, LoginActivity.class); // Cambia a la actividad de login
         startActivity(intent);
