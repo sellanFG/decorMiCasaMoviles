@@ -6,9 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.bumptech.glide.Glide;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,7 +50,12 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Cate
         CategoriaRequest categoria = categorias.get(position);
         holder.nombreTextView.setText(categoria.getNombre());
         holder.descripcionTextView.setText(categoria.getDescripcion());
-        holder.imgTextView.setText(categoria.getImagen());
+        //holder.imgTextView.setText(categoria.getImagen());
+        Glide.with(context)
+                .load(categoria.getImagen())
+                .placeholder(R.drawable.loading_image)
+                .error(R.drawable.default_image)
+                .into(holder.imageProducto);
         holder.btnEditar.setOnClickListener(v -> {
             EditarCategoriaFragment editarFragment = EditarCategoriaFragment.newInstance(categoria);
 
@@ -110,6 +116,7 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Cate
     public static class CategoriaViewHolder extends RecyclerView.ViewHolder {
         TextView nombreTextView, descripcionTextView, imgTextView;
         ImageButton btnEditar, btnEliminar;
+        ImageView imageProducto;
 
         public CategoriaViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -118,6 +125,7 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Cate
             imgTextView= itemView.findViewById(R.id.textImagen);
             btnEditar = itemView.findViewById(R.id.btnEditar);
             btnEliminar = itemView.findViewById(R.id.btnEliminar);
+            imageProducto = itemView.findViewById(R.id.imageProducto);
         }
     }
 }

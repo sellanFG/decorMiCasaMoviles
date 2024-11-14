@@ -22,14 +22,15 @@
         android:textColor="@android:color/white"
         android:background="@drawable/rounded_button" />
     <!-- Botón de Registrar -->
-    <Button
+    <ImageButton
         android:id="@+id/btnRegistrarCategoria"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_add"
-        android:contentDescription=""
-        android:background="@drawable/rounded_button" />
+
+        android:contentDescription="Registrar nuevo producto"
+        android:background="@drawable/rounded_button"
+        android:src="@drawable/ic_add"/>
 </RelativeLayout>

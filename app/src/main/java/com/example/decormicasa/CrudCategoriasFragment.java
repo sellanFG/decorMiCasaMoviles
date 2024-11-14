@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,7 +34,7 @@ public class CrudCategoriasFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private CategoriaAdapter adapter;
-    private Button btnRegistrarCategoria;
+    private Button btnRegistrarCategoria, btnVolver;
     private List<CategoriaRequest> categorias;
     private decorMiCasaApi api;
     private String token;
@@ -41,8 +42,9 @@ public class CrudCategoriasFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fargment_crud_categorias, container, false);
 
+        View view = inflater.inflate(R.layout.fargment_crud_categorias, container, false);
+        btnVolver = view.findViewById(R.id.btnVolver);
         recyclerView = view.findViewById(R.id.recyclerViewCategorias);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -62,7 +64,8 @@ public class CrudCategoriasFragment extends Fragment {
         adapter = new CategoriaAdapter(categorias, api, getContext(), token, getParentFragmentManager());
         recyclerView.setAdapter(adapter);
 
-        btnRegistrarCategoria = view.findViewById(R.id.btnRegistrarCategoria);
+
+        AppCompatImageButton btnRegistrarCategoria = view.findViewById(R.id.btnRegistrarCategoria);
         btnRegistrarCategoria.setOnClickListener(v -> {
             try {
                 requireActivity().getSupportFragmentManager().beginTransaction()
@@ -76,8 +79,9 @@ public class CrudCategoriasFragment extends Fragment {
         });
 
         obtenerCategorias();
-
+        btnVolver.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
         return view;
+
     }
 
     private void obtenerCategorias() {

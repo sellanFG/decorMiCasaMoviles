@@ -22,7 +22,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nombre del producto">
+                android:hint="Nombre de la categoria">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextNombre"
                     android:layout_width="match_parent"
@@ -33,7 +33,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Descripción del producto">
+                android:hint="Descripción de la categoria">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextDescripcion"
                     android:layout_width="match_parent"

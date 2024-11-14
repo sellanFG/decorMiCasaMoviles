@@ -33,10 +33,20 @@
             android:id="@+id/textImagen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Url de imagen: " />
+            android:text=" " />
 
 
     </LinearLayout>
+    <ImageView
+        android:id="@+id/imageProducto"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+
+        android:contentDescription="Imagen del Producto"
+        android:layout_gravity="center"
+        android:layout_marginEnd="8dp"
+
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:orientation="vertical"

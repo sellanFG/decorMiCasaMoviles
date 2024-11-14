@@ -55,7 +55,14 @@ public class RegistrarCategoriaFragment extends Fragment {
         String descripcion = editTextDescripcion.getText().toString();
 
         String imagen = editTextImagen.getText().toString();
-
+        if (nombre.isEmpty() || descripcion.isEmpty() || imagen.isEmpty()) {
+            Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
+            return;
+        }
+         /*if (!imagen.startsWith("http://") && !imagen.startsWith("https://")) {
+            Toast.makeText(requireContext(), "Ingrese un enlace válido para la imagen, por ejemplo: https://imagen.jpg", Toast.LENGTH_SHORT).show();
+            return;
+        }*/
 
         CategoriaRequest nuevoCategoria = new CategoriaRequest(nombre, descripcion, imagen);
 
