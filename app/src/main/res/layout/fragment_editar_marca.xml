@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegistrarCategoriaFragment">
+    tools:context=".ResgistrarMarcaFragment">
 
 
     <ScrollView
@@ -22,7 +22,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nombre de la categoria">
+                android:hint="Nombre de la marca">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextNombre"
                     android:layout_width="match_parent"
@@ -33,7 +33,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Descripción de la categoria">
+                android:hint="Descripción de la marca">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextDescripcion"
                     android:layout_width="match_parent"
@@ -60,6 +60,31 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="URL de la imagen"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Características"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Usos"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="ID de la categoria">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextIdCategoria"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="URL de la imagen">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextImagen"
@@ -68,32 +93,25 @@
                     android:inputType="textUri" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Contenedor horizontal para los botones -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center"
+                android:gravity="center_horizontal"
                 android:layout_marginTop="16dp">
 
-                <!-- Botón Volver -->
-                <Button
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEditar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="Editar" />
+
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnVolver"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Volver"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/rounded_button"
-                    android:textColor="@android:color/white"/>
-
-                <!-- Botón Registrar -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnRegistrar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Registrar Marca"
-                    android:background="@drawable/rounded_button"
-                    android:textColor="@android:color/white" />
+                    android:text="Volver" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

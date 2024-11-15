@@ -27,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RegistrarCategoriaFragment extends Fragment {
 
     private EditText editTextNombre, editTextDescripcion, editTextImagen;
-    private Button btnRegistrar;
+    private Button btnRegistrar, btnVolver;
 
 
     public RegistrarCategoriaFragment() {
@@ -44,10 +44,12 @@ public class RegistrarCategoriaFragment extends Fragment {
 
 
         btnRegistrar = view.findViewById(R.id.btnRegistrar);
+        btnVolver = view.findViewById(R.id.btnVolver);
 
         btnRegistrar.setOnClickListener(v -> registrarCategoria());
-
+        btnVolver.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
         return view;
+
     }
 
     private void registrarCategoria() {

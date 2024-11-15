@@ -20,7 +20,7 @@
             android:id="@+id/textNombre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nombre de la categoria"
+            android:text="Nombre de la marca"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -30,12 +30,6 @@
             android:layout_height="wrap_content"
             android:text="Descripcion: " />
 
-        <TextView
-            android:id="@+id/textImagen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" " />
-
 
     </LinearLayout>
     <ImageView
@@ -43,12 +37,11 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
 
-        android:contentDescription="Imagen del Producto"
+        android:contentDescription="Imagen de la marca"
         android:layout_gravity="center"
         android:layout_marginEnd="8dp"
 
         android:scaleType="centerCrop" />
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
@@ -60,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_edit"
-            android:contentDescription="Editar Categoria"
+            android:contentDescription="Editar Producto"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             app:tint="@color/primaryBlue"/>
 
@@ -69,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_delete"
-            android:contentDescription="Eliminar Categoria"
+            android:contentDescription="Eliminar Producto"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:layout_marginTop="8dp"
             app:tint="@color/naranja"/>

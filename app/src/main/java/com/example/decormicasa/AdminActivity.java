@@ -89,6 +89,24 @@ public class AdminActivity extends AppCompatActivity {
             transaction.addToBackStack(null);
             transaction.commit();
         });
+        MaterialButton btnMarcas = findViewById(R.id.btnMarcas);
+
+
+        if (btnMarcas == null || gridOptions == null || fragmentContainer == null) {
+            Log.e(TAG, "Error al obtener las vistas");
+            return;
+        }
+
+        btnMarcas.setOnClickListener(v -> {
+            Log.d(TAG, "Botón de marcas clickeado");
+            gridOptions.setVisibility(View.GONE);
+            fragmentContainer.setVisibility(View.VISIBLE);
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, new CrudMarcasFragment());
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
     }
 
     private void cerrarSesion() {

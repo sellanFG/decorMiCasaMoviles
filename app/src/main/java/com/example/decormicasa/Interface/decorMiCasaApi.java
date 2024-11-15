@@ -6,6 +6,7 @@ import com.example.decormicasa.model.AuthRequest;
 import com.example.decormicasa.model.AuthResponse;
 import com.example.decormicasa.model.CategoriaRequest;
 import com.example.decormicasa.model.MarcaRequest;
+import com.example.decormicasa.model.MarcasRequest;
 import com.example.decormicasa.model.PedidoRequest;
 import com.example.decormicasa.model.ProductRequest;
 import com.example.decormicasa.model.ProductoClienteRequest;
@@ -57,6 +58,15 @@ public interface decorMiCasaApi {
     @GET("api_obtenermarcas")
     Call<List<MarcaRequest>> obtenermarcas(@Header("Authorization") String authorization);
 
+    @GET("api_obtenermarcas_imagen")
+    Call<List<MarcasRequest>> obtenerMarcasImg(@Header("Authorization") String authorization);
+    @POST("marcas")
+    Call<Void> registrarMarca(@Body MarcasRequest marca);
+    @PUT("editar_marcas/{id}")
+    Call<Void> actualizarMarca(@Path("id") int id, @Body MarcasRequest marca);
+
+    @DELETE("eliminar_marcas/{id}")
+    Call<Void> eliminarMarca(@Path("id") int id);
     @FormUrlEncoded
     @POST("api_obtenerproductos_cliente")
     Call<List<ProductoClienteRequest>> obtenerproductoscliente(@Header("Authorization") String authorization,
