@@ -23,6 +23,9 @@
             android:value="AIzaSyDfe7JvlK82a1m_13h-D24SmAnU7p9kbpY" />
 
         <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
             android:name=".ClienteActivity"
             android:exported="false" />
         <activity

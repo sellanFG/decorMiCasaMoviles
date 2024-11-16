@@ -71,13 +71,31 @@
                     android:layout_height="wrap_content"
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnRegistrar"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Registrar Vendedor"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp" />
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="16dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnVolver"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Volver"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/rounded_button"
+                    android:textColor="@android:color/white"/>
+
+                <!-- Botón Registrar -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRegistrar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Registrar Vendedor"
+                    android:background="@drawable/rounded_button"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

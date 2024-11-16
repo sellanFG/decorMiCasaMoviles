@@ -25,12 +25,13 @@ public class AdminActivity extends AppCompatActivity {
 
         // Inicialización de vistas
         MaterialButton btnProductos = findViewById(R.id.btnProductos);
+        MaterialButton btnEmpleado = findViewById(R.id.btnEmpleados);
         View gridOptions = findViewById(R.id.gridOptions);
         View fragmentContainer = findViewById(R.id.fragment_container);
         btnUsuario = findViewById(R.id.btnUsuario);  // Botón de usuario
 
         // Verificar si las vistas existen
-        if (btnProductos == null || gridOptions == null || fragmentContainer == null || btnUsuario == null) {
+        if (btnProductos == null || gridOptions == null || fragmentContainer == null || btnUsuario == null || btnEmpleado == null) {
             Log.e(TAG, "Error al obtener las vistas");
             return;
         }
@@ -46,6 +47,20 @@ public class AdminActivity extends AppCompatActivity {
             transaction.addToBackStack(null);
             transaction.commit();
         });
+
+        // Acción al presionar el botón de empleados
+
+        btnEmpleado.setOnClickListener(v -> {
+            Log.d(TAG, "Botón de empleados clickeado");
+            gridOptions.setVisibility(View.GONE);
+            fragmentContainer.setVisibility(View.VISIBLE);
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, new CrudUsuariosFragment());
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
+
 
         // Listener para cambios en la pila de fragmentos (back stack)
         getSupportFragmentManager().addOnBackStackChangedListener(() -> {

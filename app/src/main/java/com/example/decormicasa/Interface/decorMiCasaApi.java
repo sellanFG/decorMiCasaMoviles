@@ -93,12 +93,14 @@ public interface decorMiCasaApi {
     Call<Void> editarUsuario(@Header("Authorization") String token, @Path("id") int id, @Body JsonObject data);
 
 
-    @FormUrlEncoded
     @POST("register_admin")
-    Call<Void> registrarAdmin(@Header("Authorization") String authorization,
-                              @Field("nombre") String nombre,
-                              @Field("email") String email,
-                              @Field("password") String password,
-                              @Field("direccion") String direccion,
-                              @Field("telefono") String telefono);
+    Call<Void> registrarAdmin(@Header("Authorization") String authorization, @Body UsuarioRequest UsuarioRequest);
+
+    public interface ApiService {
+        @POST("register")
+        Call<UserResponse> registerUser(@Body User user);
+
+    }
+    @GET("obtener_empleados")
+    Call<List<UsuarioRequest>> obtener_empleados(@Header("Authorization") String authorization);
 }
