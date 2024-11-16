@@ -10,6 +10,8 @@ import com.example.decormicasa.model.MarcasRequest;
 import com.example.decormicasa.model.PedidoRequest;
 import com.example.decormicasa.model.ProductRequest;
 import com.example.decormicasa.model.ProductoClienteRequest;
+import com.example.decormicasa.model.User;
+import com.example.decormicasa.model.UserResponse;
 import com.example.decormicasa.model.UsuarioRequest;
 
 import java.util.List;
@@ -86,15 +88,10 @@ public interface decorMiCasaApi {
 
 
     @POST("register_admin")
-    Call<Void> registrarAdmin(@Header("Authorization") String authorization, @Body UsuarioRequest usuario);
-    @PUT("editar_admin/{id}")
-    Call<Void> editar_admin(@Path("id") int id, @Body UsuarioRequest usuario);
+    Call<Void> registrarAdmin(@Header("Authorization") String authorization, @Body UsuarioRequest UsuarioRequest);
 
-    @DELETE("eliminar_empleado/{id}")
-    Call<Void> eliminar_empleado(@Path("id") int id);
-
-
-    @GET("obtener_empleados")
-    Call<List<UsuarioRequest>> obtener_empleados(@Header("Authorization") String authorization);
-
+    public interface ApiService {
+        @POST("register")
+        Call<UserResponse> registerUser(@Body User user);
+    }
 }
