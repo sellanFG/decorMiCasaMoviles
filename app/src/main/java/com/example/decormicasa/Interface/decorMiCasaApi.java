@@ -93,5 +93,8 @@ public interface decorMiCasaApi {
     public interface ApiService {
         @POST("register")
         Call<UserResponse> registerUser(@Body User user);
+
     }
+    @GET("obtener_empleados")
+    Call<List<UsuarioRequest>> obtener_empleados(@Header("Authorization") String authorization);
 }
