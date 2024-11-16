@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.decormicasa.Interface.decorMiCasaApi;
 import com.example.decormicasa.login.LoginActivity;
 import com.example.decormicasa.model.ProductRequest;
+import com.example.decormicasa.model.UsuarioRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class CrudUsuariosFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private ProductosAdapter adapter;
-    private List<ProductRequest> productos;
+    private UsuariosAdapter adapter;
+    private List<UsuarioRequest> usuarios;
     private Button btnRegistrarUsuario;
 
     @Nullable
@@ -45,7 +46,7 @@ public class CrudUsuariosFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerViewUsuarios);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        productos = new ArrayList<>();
+        usuarios = new ArrayList<>();
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("tokenJWT", "");
@@ -63,54 +64,54 @@ public class CrudUsuariosFragment extends Fragment {
             startActivity(new Intent(getContext(), LoginActivity.class));
         } else {
             // Configura el adaptador y RecyclerView normalmente
-            adapter = new ProductosAdapter(productos, api, getContext(), token, getParentFragmentManager());
+            adapter = new UsuariosAdapter(usuarios, api, getContext(), token, getParentFragmentManager());
             recyclerView.setAdapter(adapter);
         }
 
-        obtenerProductos(api, token);
+        obtener_empleados(api, token);
 
         btnRegistrarUsuario = view.findViewById(R.id.btnRegistrarUsuario);
         btnRegistrarUsuario.setOnClickListener(v -> {
             try {
                 requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new RegistrarProductoFragment())
+                        .replace(R.id.fragment_container, new RegistrarUsuarioFragment())
                         .addToBackStack(null)
                         .commit();
             } catch (Exception e) {
-                Log.e("CrudProductosFragment", "Error al abrir RegistrarProductoFragment", e);
-                Toast.makeText(getContext(), "Error al abrir el registro de producto", Toast.LENGTH_SHORT).show();
+                Log.e("CrudusuarioFragment", "Error al abrir RegistrarusuarioFragment", e);
+                Toast.makeText(getContext(), "Error al abrir el registro de usuario", Toast.LENGTH_SHORT).show();
             }
         });
 
         return view;
     }
 
-    private void obtenerProductos(decorMiCasaApi api, String tokenJWT) {
+    private void obtener_empleados(decorMiCasaApi api, String tokenJWT) {
         if (tokenJWT == null || tokenJWT.isEmpty()) {
             Toast.makeText(getContext(), "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        Call<List<ProductRequest>> call = api.obtenerproductos("JWT " + tokenJWT);
-        call.enqueue(new Callback<List<ProductRequest>>() {
+        Call<List<UsuarioRequest>> call = api.obtener_empleados("JWT " + tokenJWT);
+        call.enqueue(new Callback<List<UsuarioRequest>>() {
             @Override
-            public void onResponse(Call<List<ProductRequest>> call, Response<List<ProductRequest>> response) {
+            public void onResponse(Call<List<UsuarioRequest>> call, Response<List<UsuarioRequest>> response) {
                 Context context = null;
                 if (response.isSuccessful() && response.body() != null) {
-                    productos.clear();
-                    productos.addAll(response.body());
+                    usuarios.clear();
+                    usuarios.addAll(response.body());
                     adapter.notifyDataSetChanged();
                 } else if (response.code() == 401) {
                     // Código 401 indica que la autenticación falló
                     Toast.makeText(context, "Sesión expirada. Por favor, inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
                     context.startActivity(new Intent(context, LoginActivity.class));
                 } else {
-                    Toast.makeText(context, "Error al cargar productos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Error al cargar usuarios", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<ProductRequest>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<UsuarioRequest>> call, @NonNull Throwable t){
                 Toast.makeText(getContext(), "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
