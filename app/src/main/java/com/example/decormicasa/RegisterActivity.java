@@ -110,6 +110,8 @@ public class RegisterActivity extends AppCompatActivity {
                         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish(); // Cierra la actividad de registro
+
+
                     } else {
                         Toast.makeText(RegisterActivity.this, userResponse != null ? userResponse.getMessage() : "Error en el registro", Toast.LENGTH_SHORT).show();
                     }
