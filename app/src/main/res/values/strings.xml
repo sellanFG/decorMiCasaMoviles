@@ -36,7 +36,8 @@
     <string name="sel_img">Seleccionar imagen</string>
     <string name="precio">Precio</string>
     <string name="lista_productos_fragment_label">Lista de productos</string>
-
+    <string name="politica">"POLÍTICAS DE PRIVACIDAD"</string>
+    <string name="ubicacion">"ENCUÉNTRANOS AQUÍ"</string>
 
     <string name="inicio">"BIENVENIDO A DECOR MI CASA"</string>
     <string name="categorias">"CATEGORÍAS"</string>

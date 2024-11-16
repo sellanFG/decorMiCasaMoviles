@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -15,6 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DecorMiCasa"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDfe7JvlK82a1m_13h-D24SmAnU7p9kbpY" />
+
         <activity
             android:name=".ClienteActivity"
             android:exported="false" />
@@ -41,7 +48,12 @@
         <activity
             android:name=".NosotrosActivity"
             android:exported="true" />
-
+        <activity
+            android:name=".MapActivity"
+            android:exported="true" />
+        <activity
+            android:name=".PoliticaActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

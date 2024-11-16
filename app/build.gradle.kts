@@ -52,4 +52,6 @@ dependencies {
     annotationProcessor (libs.compiler)
     //libreria de swip refresh layout
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    implementation (libs.play.services.maps)
+    implementation (libs.play.services.location)
 }

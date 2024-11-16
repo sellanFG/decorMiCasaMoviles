@@ -127,9 +127,17 @@ public class ClienteActivity extends AppCompatActivity {
                     startActivity(intent);
                     drawerLayout.closeDrawer(GravityCompat.START);
                     return true;
-
+                } else if (id == R.id.nav_privacidad) {
+                    Intent intent = new Intent(ClienteActivity.this, PoliticaActivity.class);
+                    startActivity(intent);
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    return true;
+                } else if (id == R.id.nav_mapa) {
+                    Intent intent = new Intent(ClienteActivity.this, MapActivity.class);
+                    startActivity(intent);
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    return true;
                 }
-
                 return false;
             }
         });
