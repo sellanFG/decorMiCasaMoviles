@@ -328,9 +328,8 @@ public class ClienteActivity extends AppCompatActivity {
                 int id = item.getItemId();
 
                 if (id == R.id.opcion_editar) {
-                    // Aquí abre la actividad o diálogo para editar usuario
-                    Toast.makeText(ClienteActivity.this, "Editar Usuario", Toast.LENGTH_SHORT).show();
-                    // Aquí podrías abrir una nueva actividad o un diálogo para editar el usuario
+                    Intent intent = new Intent(ClienteActivity.this, EditarUsuarioActivity.class);
+                    startActivity(intent);
                     return true;
                 } else if (id == R.id.opcion_cerrar_sesion) {
                     // Aquí añade la lógica para cerrar sesión

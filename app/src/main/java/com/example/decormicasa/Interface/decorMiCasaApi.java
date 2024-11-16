@@ -10,6 +10,9 @@ import com.example.decormicasa.model.MarcasRequest;
 import com.example.decormicasa.model.PedidoRequest;
 import com.example.decormicasa.model.ProductRequest;
 import com.example.decormicasa.model.ProductoClienteRequest;
+import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -82,6 +85,12 @@ public interface decorMiCasaApi {
                                             @Field("metodoPago") String metodoPago,
                                             @Field("detalleVenta") String detalleVenta
     );
+
+    @GET("obtener_usuario/{id}")
+    Call<JsonObject> obtenerUsuario(@Header("Authorization") String token, @Path("id") int id);
+
+    @PUT("editar_usuario/{id}")
+    Call<Void> editarUsuario(@Header("Authorization") String token, @Path("id") int id, @Body JsonObject data);
 
 
     @FormUrlEncoded
