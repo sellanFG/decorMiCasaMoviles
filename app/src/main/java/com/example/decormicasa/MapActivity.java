@@ -98,7 +98,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng decorMiCasaLocation = new LatLng(-6.766666619665226, -79.84111790338584);
+        LatLng decorMiCasaLocation = new LatLng(-6.7677884, -79.8409457);
         mMap.addMarker(new MarkerOptions().position(decorMiCasaLocation).title("Decor Mi Casa E.I.R.L."));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(decorMiCasaLocation, 20));
     }

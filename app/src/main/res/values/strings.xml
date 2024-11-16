@@ -37,7 +37,9 @@
     <string name="precio">Precio</string>
     <string name="lista_productos_fragment_label">Lista de productos</string>
     <string name="politica">"POLÍTICAS DE PRIVACIDAD"</string>
+    <string name="nosotros">"NOSOTROS"</string>
     <string name="ubicacion">"ENCUÉNTRANOS AQUÍ"</string>
+    <string name="p_seguridad">"Nos tomamos muy en serio la protección de tu información. Aplicamos medidas técnicas y organizativas para garantizar que tus datos se mantengan seguros y confidenciales. Esto incluye el acceso limitado únicamente al personal autorizado."</string>
 
     <string name="inicio">"BIENVENIDO A DECOR MI CASA"</string>
     <string name="categorias">"CATEGORÍAS"</string>
