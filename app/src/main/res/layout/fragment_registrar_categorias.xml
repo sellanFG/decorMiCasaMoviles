@@ -91,7 +91,7 @@
                     android:id="@+id/btnRegistrar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Registrar Marca"
+                    android:text="Registrar Categoria"
                     android:background="@drawable/rounded_button"
                     android:textColor="@android:color/white" />
             </LinearLayout>
