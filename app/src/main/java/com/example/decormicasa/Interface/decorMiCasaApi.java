@@ -9,6 +9,9 @@ import com.example.decormicasa.model.MarcaRequest;
 import com.example.decormicasa.model.MarcasRequest;
 import com.example.decormicasa.model.PedidoRequest;
 import com.example.decormicasa.model.ProductRequest;
+import com.example.decormicasa.model.User;
+import com.example.decormicasa.model.UserResponse;
+import com.example.decormicasa.model.UsuarioRequest;
 import com.example.decormicasa.model.ProductoClienteRequest;
 import com.google.gson.JsonObject;
 
