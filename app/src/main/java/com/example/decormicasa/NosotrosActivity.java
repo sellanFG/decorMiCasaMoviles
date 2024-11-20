@@ -1,85 +1,65 @@
 package com.example.decormicasa;
 
-import android.content.Intent;
+import androidx.viewpager2.widget.ViewPager2;
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.viewpager.widget.PagerAdapter;
 
-import com.google.android.material.navigation.NavigationView;
+import android.os.Handler;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 public class NosotrosActivity extends AppCompatActivity {
-    private ImageButton btnMenu;
-    private DrawerLayout drawerLayout;
+
+    private ViewPager2 viewPager2;
+    private int[] sampleImages = {R.drawable.banner1, R.drawable.carrusel_img1, R.drawable.carrusel_img2};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_nosotros);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        viewPager2 = findViewById(R.id.viewPager2);
 
-        drawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        // Establece un adaptador
+        CarouselAdapter carouselAdapter = new CarouselAdapter(sampleImages);
+        viewPager2.setAdapter(carouselAdapter);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-
-        btnMenu = findViewById(R.id.btnMenu);
-        btnMenu.setOnClickListener(new View.OnClickListener() {
+        // Desliza automáticamente cada 3 segundos
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onClick(View v) {
-                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                } else {
-                    drawerLayout.openDrawer(GravityCompat.START);
-                }
+            public void run() {
+                int currentItem = viewPager2.getCurrentItem();
+                int nextItem = (currentItem + 1) % sampleImages.length;
+                viewPager2.setCurrentItem(nextItem, true);
+                new Handler().postDelayed(this, 3000);  // Repite cada 3 segundos
             }
-        });
+        }, 3000);  // Primer retraso de 3 segundos
+    }
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                int id = menuItem.getItemId();
+    private class ImageAdapter extends PagerAdapter {
+        @Override
+        public int getCount() {
+            return sampleImages.length;
+        }
 
-                if (id == R.id.nav_categorias) {
-                    Intent intent = new Intent(NosotrosActivity.this, CategoriasActivity.class);
-                    startActivity(intent);
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    return true;
-                } else if (id == R.id.nav_nosotros) {
-                    Intent intent = new Intent(NosotrosActivity.this, NosotrosActivity.class);
-                    startActivity(intent);
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    return true;
-                } else if (id == R.id.nav_privacidad) {
-                    Intent intent = new Intent(NosotrosActivity.this, PoliticaActivity.class);
-                    startActivity(intent);
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    return true;
-                } else if (id == R.id.nav_mapa) {
-                    Intent intent = new Intent(NosotrosActivity.this, MapActivity.class);
-                    startActivity(intent);
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    return true;
-                }
-                return false;
-            }
-        });
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            ImageView imageView = new ImageView(NosotrosActivity.this);
+            imageView.setImageResource(sampleImages[position]);
+            container.addView(imageView);
+            return imageView;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
+        }
     }
 }

@@ -54,4 +54,7 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation (libs.play.services.maps)
     implementation (libs.play.services.location)
+    //animacion carrusel
+    implementation (libs.viewpager2)
+    implementation ("com.google.android.material:material:1.12.0")
 }
