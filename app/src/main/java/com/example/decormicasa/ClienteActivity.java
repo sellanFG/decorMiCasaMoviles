@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -104,11 +106,15 @@ public class ClienteActivity extends AppCompatActivity {
         btnMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation slideBounce = AnimationUtils.loadAnimation(ClienteActivity.this, R.anim.slide_bounce);
+                findViewById(R.id.btnMenu).startAnimation(slideBounce);
+                v.postDelayed(() -> {
                 if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     drawerLayout.closeDrawer(GravityCompat.START);
                 } else {
                     drawerLayout.openDrawer(GravityCompat.START);
                 }
+                }, 300); // Tiempo de la animación antes de mostrar el diálogo
             }
         });
 
@@ -173,7 +179,6 @@ public class ClienteActivity extends AppCompatActivity {
                     mostrarFavoritos();
                 }
                 layoutProductos.setRefreshing(false);
-
             }
         });
 
@@ -207,6 +212,11 @@ public class ClienteActivity extends AppCompatActivity {
         btnCarrito.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // animación
+                Animation slideBounce = AnimationUtils.loadAnimation(ClienteActivity.this, R.anim.slide_bounce);
+                findViewById(R.id.btnCarrito).startAnimation(slideBounce);
+
+                v.postDelayed(() -> {
                 //Validar shay productos en el carrito
                 int cantidadProductosCarrito = productoClienteAdapter.carrito.size();
                 if (cantidadProductosCarrito == 0){
@@ -276,6 +286,7 @@ public class ClienteActivity extends AppCompatActivity {
 
                 //Mostrar el dialog
                 dialog.show();
+                }, 300); // Tiempo de la animación antes de mostrar el diálogo
             }
         });
 
@@ -283,10 +294,14 @@ public class ClienteActivity extends AppCompatActivity {
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation slideBounce = AnimationUtils.loadAnimation(ClienteActivity.this, R.anim.slide_bounce);
+                findViewById(R.id.btnHome).startAnimation(slideBounce);
+                v.postDelayed(() -> {
                 layoutFiltros.setVisibility(View.VISIBLE);
                 txtTituloFavoritos.setVisibility(View.GONE);
                 mostrarProductos();
                 modo = "listado";
+                }, 300); // Tiempo de la animación antes de mostrar el diálogo
             }
         });
 
@@ -294,18 +309,23 @@ public class ClienteActivity extends AppCompatActivity {
         btnFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation slideBounce = AnimationUtils.loadAnimation(ClienteActivity.this, R.anim.slide_bounce);
+                findViewById(R.id.btnFav).startAnimation(slideBounce);
+                v.postDelayed(() -> {
                 layoutFiltros.setVisibility(View.GONE);
                 txtTituloFavoritos.setVisibility(View.VISIBLE);
                 mostrarFavoritos();
                 modo = "favoritos";
+            }, 300); // Tiempo de la animación antes de mostrar el diálogo
             }
         });
 
         // Inicializar el botón de usuario
         ImageButton btnUsuario = findViewById(R.id.btnUsuario);
 
-// Configurar el PopupMenu para el botón de usuario
-        btnUsuario.setOnClickListener(view -> {
+        // Configurar el PopupMenu para el botón de usuario
+            btnUsuario.setOnClickListener(view -> {
+                aplicarAnimacion(view);
             // Crear el PopupMenu anclado al botón de usuario
             PopupMenu popupMenu = new PopupMenu(ClienteActivity.this, view);
             popupMenu.setGravity(Gravity.END); // Desplegar desde el lado derecho
@@ -630,6 +650,13 @@ public class ClienteActivity extends AppCompatActivity {
 
         return formato.format(numero);
 
+    }
+
+    private void aplicarAnimacion(View view) {
+        // Cargar la animación desde el archivo de recursos
+        Animation slideBounce = AnimationUtils.loadAnimation(ClienteActivity.this, R.anim.slide_bounce);
+        // Iniciar la animación en la vista
+        view.startAnimation(slideBounce);
     }
 
 }
