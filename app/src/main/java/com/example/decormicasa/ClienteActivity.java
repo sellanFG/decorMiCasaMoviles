@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -41,7 +42,6 @@ import com.example.decormicasa.login.LoginActivity;
 import com.example.decormicasa.model.CategoriaRequest;
 import com.example.decormicasa.model.MarcaRequest;
 import com.example.decormicasa.model.PedidoRequest;
-import com.example.decormicasa.model.ProductRequest;
 import com.example.decormicasa.model.ProductoClienteRequest;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
@@ -169,7 +169,6 @@ public class ClienteActivity extends AppCompatActivity {
         llenarCategorias();
         llenarMarcas();
 
-        //Actualizar los productos al deslizar hacia abajo
         layoutProductos.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -290,17 +289,49 @@ public class ClienteActivity extends AppCompatActivity {
             }
         });
 
-        //ir a listado
+        ImageButton btnShop = findViewById(R.id.btnShop);
+
+        btnShop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Animation slideBounce = AnimationUtils.loadAnimation(ClienteActivity.this, R.anim.slide_bounce);
+                findViewById(R.id.btnShop).startAnimation(slideBounce);
+
+                v.postDelayed(() -> {
+                    // Ocultar vistas de Home y Favoritos
+                    layoutFiltros.setVisibility(View.GONE);
+                    txtTituloFavoritos.setVisibility(View.GONE);
+                    layoutProductos.setVisibility(View.GONE);
+
+                    // Mostrar vistas de Pedidos
+                    findViewById(R.id.layoutPedidos).setVisibility(View.VISIBLE);
+
+                    mostrarPedidos(); // Mostrar los pedidos
+                    modo = "pedidos"; // Cambiar el modo
+                }, 300); // Tiempo de la animación antes de mostrar el diálogo
+            }
+        });
+
+
+
+
+
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Animation slideBounce = AnimationUtils.loadAnimation(ClienteActivity.this, R.anim.slide_bounce);
                 findViewById(R.id.btnHome).startAnimation(slideBounce);
+
                 v.postDelayed(() -> {
-                layoutFiltros.setVisibility(View.VISIBLE);
-                txtTituloFavoritos.setVisibility(View.GONE);
-                mostrarProductos();
-                modo = "listado";
+                    // Mostrar vistas de Home
+                    layoutFiltros.setVisibility(View.VISIBLE);
+                    layoutProductos.setVisibility(View.VISIBLE);
+                    // Ocultar vistas de Favoritos y Pedidos
+                    txtTituloFavoritos.setVisibility(View.GONE);
+                    findViewById(R.id.layoutPedidos).setVisibility(View.GONE);
+
+                    mostrarProductos(); // Mostrar productos en Home
+                    modo = "listado"; // Cambiar el modo
                 }, 300); // Tiempo de la animación antes de mostrar el diálogo
             }
         });
@@ -311,14 +342,24 @@ public class ClienteActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Animation slideBounce = AnimationUtils.loadAnimation(ClienteActivity.this, R.anim.slide_bounce);
                 findViewById(R.id.btnFav).startAnimation(slideBounce);
+
                 v.postDelayed(() -> {
-                layoutFiltros.setVisibility(View.GONE);
-                txtTituloFavoritos.setVisibility(View.VISIBLE);
-                mostrarFavoritos();
-                modo = "favoritos";
-            }, 300); // Tiempo de la animación antes de mostrar el diálogo
+                    layoutFiltros.setVisibility(View.GONE);
+                    findViewById(R.id.layoutPedidos).setVisibility(View.GONE);
+
+                    txtTituloFavoritos.setVisibility(View.VISIBLE);
+
+                    mostrarFavoritos();
+                    modo = "favoritos";
+                }, 300); 
             }
         });
+
+
+
+
+
+
 
         // Inicializar el botón de usuario
         ImageButton btnUsuario = findViewById(R.id.btnUsuario);
@@ -488,6 +529,47 @@ public class ClienteActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call<List<MarcaRequest>> call, @NonNull Throwable t) {
                 Toast.makeText(ClienteActivity.this, "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
                 Log.e("ERROR", "onResponse: "+t.getMessage());
+            }
+        });
+    }
+
+    void mostrarPedidos() {
+        List<PedidoRequest> pedidos = new ArrayList<>();
+        SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("tokenJWT", "");
+
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(this, "Sesión expirada. Por favor, inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(getString(R.string.dominioservidor))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
+        Call<List<PedidoRequest>> call = api.obtenerPedidos("JWT " + token);
+
+        call.enqueue(new Callback<List<PedidoRequest>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<PedidoRequest>> call, @NonNull Response<List<PedidoRequest>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    pedidos.clear();
+                    pedidos.addAll(response.body());
+
+                    RecyclerView recyclerViewPedidos = findViewById(R.id.recyclerViewPedidos);
+                    PedidosAdapter adapter = new PedidosAdapter(pedidos, ClienteActivity.this);
+                    recyclerViewPedidos.setLayoutManager(new LinearLayoutManager(ClienteActivity.this));
+                    recyclerViewPedidos.setAdapter(adapter);
+                } else {
+                    Toast.makeText(ClienteActivity.this, "Error al cargar los pedidos.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<PedidoRequest>> call, @NonNull Throwable t) {
+                Toast.makeText(ClienteActivity.this, "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

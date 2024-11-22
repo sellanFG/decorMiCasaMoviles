@@ -2,27 +2,82 @@ package com.example.decormicasa.model;
 
 public class PedidoRequest {
 
-    String code;
-    String message;
+    private int idPedido;
+    private String fechaPedido;
+    private double total;
+    private Double igv; // Puede ser null
+    private String estado;
+    private int idUsuarios;
 
-    public PedidoRequest(String code, String message) {
-        this.code = code;
-        this.message = message;
+    public PedidoRequest(int idPedido, String fechaPedido, double total, Double igv, String estado, int idUsuarios) {
+        this.idPedido = idPedido;
+        this.fechaPedido = fechaPedido;
+        this.total = total;
+        this.igv = igv;
+        this.estado = estado;
+        this.idUsuarios = idUsuarios;
     }
 
-    public String getCode() {
-        return code;
+    public PedidoRequest() {
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public int getIdPedido() {
+        return idPedido;
     }
 
-    public String getMessage() {
-        return message;
+    public void setIdPedido(int idPedido) {
+        this.idPedido = idPedido;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public String getFechaPedido() {
+        return fechaPedido;
+    }
+
+    public void setFechaPedido(String fechaPedido) {
+        this.fechaPedido = fechaPedido;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public Double getIgv() {
+        return igv;
+    }
+
+    public void setIgv(Double igv) {
+        this.igv = igv;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public int getIdUsuarios() {
+        return idUsuarios;
+    }
+
+    public void setIdUsuarios(int idUsuarios) {
+        this.idUsuarios = idUsuarios;
+    }
+
+    @Override
+    public String toString() {
+        return "PedidoRequest{" +
+                "idPedido=" + idPedido +
+                ", fechaPedido='" + fechaPedido + '\'' +
+                ", total=" + total +
+                ", igv=" + igv +
+                ", estado='" + estado + '\'' +
+                ", idUsuarios=" + idUsuarios +
+                '}';
     }
 }

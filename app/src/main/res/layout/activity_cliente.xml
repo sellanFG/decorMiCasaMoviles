@@ -105,6 +105,7 @@
             </LinearLayout>
         </LinearLayout>
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -225,6 +226,33 @@
             </RelativeLayout>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+        <RelativeLayout
+            android:id="@+id/layoutPedidos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/topBar"
+            android:layout_above="@id/bottomNavigation"
+            android:visibility="gone"> <!-- Oculto por defecto -->
+
+            <TextView
+                android:id="@+id/txtTituloPedidos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Pedidos"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="20sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewPedidos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/txtTituloPedidos"
+                android:padding="4dp"
+                tools:listitem="@layout/item_pedido"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        </RelativeLayout>
 
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
