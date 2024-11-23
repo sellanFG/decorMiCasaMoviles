@@ -39,6 +39,10 @@ public interface decorMiCasaApi {
     @GET("api_obtenerproductos")
     Call<List<ProductRequest>> obtenerproductos(@Header("Authorization") String authorization);
 
+    @GET("/api_obtenerpedidos")
+    Call<List<PedidoRequest>> obtenerPedidos(@Header("Authorization") String token);
+
+
     @GET("ruta/obtenerProducto/{id}")
     Call<ProductRequest> obtenerProductoPorId(@Path("id") int idProducto);
 
