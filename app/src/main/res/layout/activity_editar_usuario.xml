@@ -8,6 +8,8 @@
 
     <!-- Contenedor principal -->
     <RelativeLayout
+
+
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -166,14 +168,20 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Contraseña">
-                    <com.google.android.material.textfield.TextInputEditText
+                    android:hint="Contraseña"
+                    app:endIconMode="password_toggle"
+                    >
+
+                <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTextPassword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPassword"/>
+                        android:inputType="textPassword"
+                        android:importantForAutofill="no" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Botón para guardar cambios -->

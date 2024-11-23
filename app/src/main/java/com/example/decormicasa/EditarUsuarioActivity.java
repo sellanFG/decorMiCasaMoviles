@@ -28,6 +28,9 @@ public class EditarUsuarioActivity extends AppCompatActivity {
     private int userId;
     private String token;
 
+    // Declara originalPassword aquí
+    private String originalPassword = ""; // Valor por defecto vacío
+
 
 
     @Override
@@ -85,6 +88,9 @@ public class EditarUsuarioActivity extends AppCompatActivity {
                     editTextEmail.setText(usuario.has("email") ? usuario.get("email").getAsString() : "");
                     editTextDireccion.setText(usuario.has("direccion") ? usuario.get("direccion").getAsString() : "");
                     editTextTelefono.setText(usuario.has("telefono") ? usuario.get("telefono").getAsString() : "");
+
+                    
+
                 } else {
                     Toast.makeText(EditarUsuarioActivity.this, "No se pudo cargar los datos", Toast.LENGTH_SHORT).show();
                 }
@@ -100,11 +106,16 @@ public class EditarUsuarioActivity extends AppCompatActivity {
 
 
     private void editarUsuario() {
-        String nombre = editTextNombre.getText().toString();
-        String email = editTextEmail.getText().toString();
-        String direccion = editTextDireccion.getText().toString();
-        String telefono = editTextTelefono.getText().toString();
-        String password = editTextPassword.getText().toString();
+        String nombre = editTextNombre.getText().toString().trim();
+        String email = editTextEmail.getText().toString().trim();
+        String direccion = editTextDireccion.getText().toString().trim();
+        String telefono = editTextTelefono.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim(); // Contraseña visible en el campo
+
+        if (nombre.isEmpty() || email.isEmpty() || direccion.isEmpty() || telefono.isEmpty()) {
+            Toast.makeText(this, "Por favor, complete todos los campos obligatorios.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
         int userId = sharedPreferences.getInt("id_cliente", 0);
@@ -115,7 +126,9 @@ public class EditarUsuarioActivity extends AppCompatActivity {
         data.addProperty("email", email);
         data.addProperty("direccion", direccion);
         data.addProperty("telefono", telefono);
-        if (!password.isEmpty()) {
+
+        // Solo enviar contraseña si se modificó
+        if (!password.isEmpty() && !password.equals(originalPassword)) {
             data.addProperty("password", password);
         }
 
@@ -137,6 +150,7 @@ public class EditarUsuarioActivity extends AppCompatActivity {
             }
         });
     }
+
 
 
 

@@ -54,4 +54,7 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation (libs.play.services.maps)
     implementation (libs.play.services.location)
+    //paea el usuario*
+    implementation ("com.google.android.material:material:1.9.0") // Usa la última versión estable
+
 }
