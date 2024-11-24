@@ -94,6 +94,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/TitleTextViewStyle"
                     android:layout_width="343dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -131,8 +132,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     app:cardElevation="2dp"
-                    app:cardCornerRadius="8dp"
-                    android:onClick="toggleSection">
+                    app:cardCornerRadius="8dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -178,7 +178,112 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/toggleCard1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardElevation="2dp"
+                    app:cardCornerRadius="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/baseline_person_24"
+                                android:layout_marginEnd="8dp"/>
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textSize="16sp"
+                                android:text="¿Cómo usamos la información?"
+                                android:textStyle="bold"/>
+
+                            <ImageView
+                                android:id="@+id/arrowIcon1"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/baseline_keyboard_arrow_down_24"/>
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/sectionContent1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:visibility="gone"
+                            android:text="Proveer servicios personalizados y mejorar la experiencia del usuario."
+                            android:textColor="@android:color/black"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/toggleCard2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardElevation="2dp"
+                    app:cardCornerRadius="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/baseline_person_24"
+                                android:layout_marginEnd="8dp"/>
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textSize="16sp"
+                                android:text="Actualizaciones automáticas"
+                                android:textStyle="bold"/>
+
+                            <ImageView
+                                android:id="@+id/arrowIcon2"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/baseline_keyboard_arrow_down_24"/>
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/sectionContent2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:visibility="gone"
+                            android:text="Podemos actualizar automáticamente la app para corregir errores, mejorar el rendimiento o introducir nuevas características. Te notificaremos sobre cambios significativos que puedan afectar la privacidad o el uso."
+                            android:textColor="@android:color/black"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
                 <TextView
+                    style="@style/TitleTextViewStyleBlack"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Seguridad de los datos"

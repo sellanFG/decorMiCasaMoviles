@@ -46,9 +46,6 @@
             android:exported="true"
             android:theme="@style/Theme.DecorMiCasa" />
         <activity
-            android:name=".CategoriasActivity"
-            android:exported="true" />
-        <activity
             android:name=".NosotrosActivity"
             android:exported="true" />
         <activity
@@ -60,7 +57,6 @@
         <activity
             android:name=".EditarUsuarioActivity"
             android:exported="true" />
-
     </application>
 
 </manifest>

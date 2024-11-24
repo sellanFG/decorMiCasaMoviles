@@ -11,9 +11,9 @@
         Lorem
     </string>
 
-    <string name="login_hint_username">Username</string>
-    <string name="login_hint_password">Password</string>
-    <string name="button_next">Next</string>
+    <string name="login_hint_username">Usuario</string>
+    <string name="login_hint_password">Contraseña</string>
+    <string name="button_next">INGRESAR</string>
     <string name="buttonRegistro">Registrate</string>
     <string name="dominioservidor">https://damGrupo3.pythonanywhere.com/</string>
     <string name="error_password">Password must be at least 6 characters long</string>

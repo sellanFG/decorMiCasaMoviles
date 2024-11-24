@@ -20,17 +20,24 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 
-public class PoliticaActivity extends AppCompatActivity  {
+import java.util.HashMap;
+import java.util.Map;
+
+public class PoliticaActivity extends AppCompatActivity {
+    private NavigationManager navigationManager;
     private ImageButton btnMenu;
     private DrawerLayout drawerLayout;
-    private TextView sectionContent;
-    private ImageView arrowIcon;
-    private boolean isExpanded = false;
+    private TextView sectionContent, sectionContent1, sectionContent2;
+    private ImageView arrowIcon, arrowIcon1, arrowIcon2;
+    private boolean isExpanded, isExpanded1 = false, isExpanded2 = false;
+
+    private Map<Integer, Class<?>> navigationMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_privacidad);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -45,54 +52,72 @@ public class PoliticaActivity extends AppCompatActivity  {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        // Inicializar el NavigationManager después de setContentView
+        navigationManager = new NavigationManager(this);
+        navigationManager.setupNavigation();
+
         btnMenu = findViewById(R.id.btnMenu);
-        btnMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                } else {
-                    drawerLayout.openDrawer(GravityCompat.START);
-                }
+        btnMenu.setOnClickListener(v -> {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                drawerLayout.openDrawer(GravityCompat.START);
             }
         });
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                int id = menuItem.getItemId();
+        // Inicializar el mapa de navegación
+        navigationMap = new HashMap<>();
+        navigationMap.put(R.id.nav_nosotros, NosotrosActivity.class);
+        navigationMap.put(R.id.nav_privacidad, PoliticaActivity.class);
+        navigationMap.put(R.id.nav_mapa, MapActivity.class);
+        navigationMap.put(R.id.nav_home, ClienteActivity.class);
 
-                if (id == R.id.nav_categorias) {
-                    Intent intent = new Intent(PoliticaActivity.this, CategoriasActivity.class);
-                    startActivity(intent);
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    return true;
-                } else if (id == R.id.nav_nosotros) {
-                    Intent intent = new Intent(PoliticaActivity.this, NosotrosActivity.class);
-                    startActivity(intent);
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    return true;
-                } else if (id == R.id.nav_privacidad) {
-                    Intent intent = new Intent(PoliticaActivity.this, PoliticaActivity.class);
-                    startActivity(intent);
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    return true;
-                } else if (id == R.id.nav_mapa) {
-                    Intent intent = new Intent(PoliticaActivity.this, MapActivity.class);
-                    startActivity(intent);
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    return true;
-                }
-                return false;
-            }
+        // Aquí solo necesitamos una vez el setNavigationItemSelectedListener
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            handleNavigation(menuItem);
+            return true;
         });
+
+        // Obtener las referencias de los nuevos elementos
         sectionContent = findViewById(R.id.sectionContent);
+        sectionContent1 = findViewById(R.id.sectionContent1);
+        sectionContent2 = findViewById(R.id.sectionContent2);
         arrowIcon = findViewById(R.id.arrowIcon);
+        arrowIcon1 = findViewById(R.id.arrowIcon1);
+        arrowIcon2 = findViewById(R.id.arrowIcon2);
 
+        // Setear los listeners para las nuevas tarjetas
         findViewById(R.id.toggleCard).setOnClickListener(v -> toggleSection());
+        findViewById(R.id.toggleCard1).setOnClickListener(v -> toggleSection1());
+        findViewById(R.id.toggleCard2).setOnClickListener(v -> toggleSection2());
+    }
+
+    private void handleNavigation(MenuItem menuItem) {
+        Class<?> activityClass = navigationMap.get(menuItem.getItemId());
+
+        if (activityClass != null) {
+            Intent intent = new Intent(PoliticaActivity.this, activityClass);
+            startActivity(intent);
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
     }
 
     private void toggleSection() {
+        toggleSection(sectionContent, arrowIcon, isExpanded);
+        isExpanded = !isExpanded;
+    }
+
+    private void toggleSection1() {
+        toggleSection(sectionContent1, arrowIcon1, isExpanded1);
+        isExpanded1 = !isExpanded1;
+    }
+
+    private void toggleSection2() {
+        toggleSection(sectionContent2, arrowIcon2, isExpanded2);
+        isExpanded2 = !isExpanded2;
+    }
+
+    private void toggleSection(TextView sectionContent, ImageView arrowIcon, boolean isExpanded) {
         if (isExpanded) {
             sectionContent.setVisibility(View.GONE);
             Animation rotateDown = AnimationUtils.loadAnimation(this, R.anim.rotate_down);
@@ -102,6 +127,5 @@ public class PoliticaActivity extends AppCompatActivity  {
             Animation rotateUp = AnimationUtils.loadAnimation(this, R.anim.rotate_up);
             arrowIcon.startAnimation(rotateUp);
         }
-        isExpanded = !isExpanded;
     }
 }
