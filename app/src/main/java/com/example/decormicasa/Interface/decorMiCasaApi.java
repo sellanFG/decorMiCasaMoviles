@@ -110,4 +110,10 @@ public interface decorMiCasaApi {
     }
     @GET("obtener_empleados")
     Call<List<UsuarioRequest>> obtener_empleados(@Header("Authorization") String authorization);
+
+    @PUT("editar_empleado/{id}")
+    Call<Void> editarEmpleado(@Header("Authorization") String token, @Path("id") int id, @Body UsuarioRequest usuario);
+
+    @DELETE("eliminar_empleado/{id}")
+    Call<Void> eliminarEmpleado(@Header("Authorization") String token, @Path("id") int id);
 }
