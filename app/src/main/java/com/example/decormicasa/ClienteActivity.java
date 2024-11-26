@@ -353,6 +353,7 @@ public class ClienteActivity extends AppCompatActivity {
                     txtTituloFavoritos.setVisibility(View.VISIBLE);
 
                     mostrarFavoritos();
+                    layoutProductos.setVisibility(View.VISIBLE);
                     modo = "favoritos";
                 }, 300);
             }
