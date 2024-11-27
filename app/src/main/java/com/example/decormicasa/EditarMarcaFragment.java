@@ -1,5 +1,7 @@
 package com.example.decormicasa;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,12 +34,12 @@ public class EditarMarcaFragment extends Fragment {
             editTextCaracteristicas, editTextUsos, editTextIdCategoria;
     private Button btnEditar, btnVolver;
     private Spinner spinnerEstado;
-    private int idMarca; // ID del producto a editar
+    private int idMarca; // ID de la marca a editar
 
     public EditarMarcaFragment() {
     }
 
-    // Recibe el objeto del producto a editar, junto con los datos actuales
+    // Recibe el objeto del marca a editar, junto con los datos actuales
     public static EditarMarcaFragment newInstance(MarcasRequest marca) {
         EditarMarcaFragment fragment = new EditarMarcaFragment();
         Bundle args = new Bundle();
@@ -50,10 +52,10 @@ public class EditarMarcaFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            // Recupera el producto completo desde los argumentos
+            // Recupera la marca completo desde los argumentos
             MarcasRequest marca = (MarcasRequest) getArguments().getSerializable("marca");
             if (marca != null) {
-                idMarca = marca.getIdMarca(); // Obtener el ID del producto
+                idMarca = marca.getIdMarca(); // Obtener el ID de la marca
             }
         }
     }
@@ -75,19 +77,19 @@ public class EditarMarcaFragment extends Fragment {
         if (getArguments() != null) {
             MarcasRequest marca = (MarcasRequest) getArguments().getSerializable("marca");
             if (marca != null) {
-                mostrarDatosProducto(marca);
+                mostrarDatosMarca(marca);
             }
         }
 
-        btnEditar.setOnClickListener(v -> editarProducto(idMarca));
+        btnEditar.setOnClickListener(v -> editarMarca(idMarca));
 
         btnVolver.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
         return view;
     }
 
-    // Método para mostrar los datos del producto en los campos
-    private void mostrarDatosProducto(MarcasRequest marca) {
+    // Método para mostrar los datos de la marca en los campos
+    private void mostrarDatosMarca(MarcasRequest marca) {
         editTextNombre.setText(marca.getNombre());
         editTextDescripcion.setText(marca.getDescripcion());
         editTextIdCategoria.setText(String.valueOf(marca.getIdCategoria()));
@@ -95,15 +97,21 @@ public class EditarMarcaFragment extends Fragment {
 
     }
 
-    // Método para editar el producto
-    private void editarProducto(int id) {
+    // Método para editar la marca
+    private void editarMarca(int id) {
         String nombre = editTextNombre.getText().toString();
         String descripcion = editTextDescripcion.getText().toString();
         Integer idMarca = Integer.parseInt(editTextIdCategoria.getText().toString());
         String imagen = editTextImagen.getText().toString();
-        MarcasRequest producto = new MarcasRequest(nombre, descripcion, idMarca, imagen);
+        MarcasRequest marca = new MarcasRequest(nombre, descripcion, idMarca, imagen);
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("tokenJWT", "");
 
-        Log.d("Producto JSON", producto.toString());
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(requireContext(), "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        Log.d("Marca JSON", marca.toString());
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(requireContext().getString(R.string.dominioservidor))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -111,7 +119,7 @@ public class EditarMarcaFragment extends Fragment {
 
         decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
 
-        Call<Void> call = api.actualizarMarca(id, producto);
+        Call<Void> call = api.actualizarMarca("JWT " +token, id, marca);
 
         call.enqueue(new Callback<Void>() {
             @Override

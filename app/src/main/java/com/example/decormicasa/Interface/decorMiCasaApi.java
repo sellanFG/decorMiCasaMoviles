@@ -42,28 +42,28 @@ public interface decorMiCasaApi {
     @GET("/api_obtenerpedidos")
     Call<List<PedidoRequest>> obtenerPedidos(@Header("Authorization") String token);
 
-
     @GET("ruta/obtenerProducto/{id}")
     Call<ProductRequest> obtenerProductoPorId(@Path("id") int idProducto);
 
     @POST("registrarProducto")
-    Call<Void> registrarProducto(@Body ProductRequest nuevoProducto);
+    Call<Void> registrarProducto(@Header("Authorization") String authorization, @Body ProductRequest nuevoProducto);
 
     @POST("editarProducto/{id}")
-    Call<Void> editarProducto(@Path("id") int id, @Body ProductRequest producto);
+    Call<Void> editarProducto(@Header("Authorization") String authorization,@Path("id") int id, @Body ProductRequest producto);
 
     @DELETE("eliminarProducto/{id}")
-    Call<Void> eliminarProducto(@Path("id") int id);
+    Call<Void> eliminarProducto(@Header("Authorization") String authorization,@Path("id") int id);
+
 
     @GET("api_obtenercategorias")
     Call<List<CategoriaRequest>> obtenercategorias(@Header("Authorization") String authorization);
     @POST("categorias")
-    Call<Void> registrarCategoria(@Body CategoriaRequest categoria);
+    Call<Void> registrarCategoria(@Header("Authorization") String authorization, @Body CategoriaRequest categoria);
     @PUT("editar_categorias/{id}")
-    Call<Void> actualizarCategoria(@Path("id") int id, @Body CategoriaRequest categoria);
+    Call<Void> actualizarCategoria(@Header("Authorization") String authorization, @Path("id") int id, @Body CategoriaRequest categoria);
 
     @DELETE("eliminar_categorias/{id}")
-    Call<Void> eliminarCategoria(@Path("id") int id);
+    Call<Void> eliminarCategoria(@Header("Authorization") String authorization, @Path("id") int id);
 
     @GET("api_obtenermarcas")
     Call<List<MarcaRequest>> obtenermarcas(@Header("Authorization") String authorization);
@@ -71,12 +71,12 @@ public interface decorMiCasaApi {
     @GET("api_obtenermarcas_imagen")
     Call<List<MarcasRequest>> obtenerMarcasImg(@Header("Authorization") String authorization);
     @POST("marcas")
-    Call<Void> registrarMarca(@Body MarcasRequest marca);
+    Call<Void> registrarMarca(@Header("Authorization") String authorization, @Body MarcasRequest marca);
     @PUT("editar_marcas/{id}")
-    Call<Void> actualizarMarca(@Path("id") int id, @Body MarcasRequest marca);
+    Call<Void> actualizarMarca(@Header("Authorization") String authorization, @Path("id") int id, @Body MarcasRequest marca);
 
     @DELETE("eliminar_marcas/{id}")
-    Call<Void> eliminarMarca(@Path("id") int id);
+    Call<Void> eliminarMarca(@Header("Authorization") String authorization, @Path("id") int id);
     @FormUrlEncoded
     @POST("api_obtenerproductos_cliente")
     Call<List<ProductoClienteRequest>> obtenerproductoscliente(@Header("Authorization") String authorization,
@@ -86,11 +86,11 @@ public interface decorMiCasaApi {
     @FormUrlEncoded
     @POST("api_guardarpedido")
     Call<PedidoRequest> guardarpedido(@Header("Authorization") String authorization,
-                                            @Field("id_cliente") int idCliente,
-                                            @Field("total") double total,
-                                            @Field("igv") double igv,
-                                            @Field("metodoPago") String metodoPago,
-                                            @Field("detalleVenta") String detalleVenta
+                                      @Field("id_cliente") int idCliente,
+                                      @Field("total") double total,
+                                      @Field("igv") double igv,
+                                      @Field("metodoPago") String metodoPago,
+                                      @Field("detalleVenta") String detalleVenta
     );
 
     @GET("obtener_usuario/{id}")
@@ -110,4 +110,10 @@ public interface decorMiCasaApi {
     }
     @GET("obtener_empleados")
     Call<List<UsuarioRequest>> obtener_empleados(@Header("Authorization") String authorization);
+
+    @PUT("editar_empleado/{id}")
+    Call<Void> editarEmpleado(@Header("Authorization") String token, @Path("id") int id, @Body UsuarioRequest usuario);
+
+    @DELETE("eliminar_empleado/{id}")
+    Call<Void> eliminarEmpleado(@Header("Authorization") String token, @Path("id") int id);
 }

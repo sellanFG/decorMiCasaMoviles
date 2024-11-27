@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -64,10 +66,17 @@ public class RegistrarMarcaFragment extends Fragment {
             return;
         }
 
-        /*if (!imagen.startsWith("http://") && !imagen.startsWith("https://")) {
+        if (!imagen.startsWith("http://") && !imagen.startsWith("https://")) {
             Toast.makeText(requireContext(), "Ingrese un enlace válido para la imagen, por ejemplo: https://imagen.jpg", Toast.LENGTH_SHORT).show();
             return;
-        }*/
+        }
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("tokenJWT", "");
+
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(requireContext(), "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         try {
 
@@ -75,7 +84,7 @@ public class RegistrarMarcaFragment extends Fragment {
 
             MarcasRequest nuevoMarca = new MarcasRequest(nombre, descripcion, idCategoria, imagen);
 
-            Log.d("Producto JSON", nuevoMarca.toString());
+            Log.d("Marca JSON", nuevoMarca.toString());
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(requireContext().getString(R.string.dominioservidor))
                     .addConverterFactory(GsonConverterFactory.create())
@@ -83,7 +92,7 @@ public class RegistrarMarcaFragment extends Fragment {
 
             decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
 
-            Call<Void> call = api.registrarMarca(nuevoMarca);
+            Call<Void> call = api.registrarMarca("JWT " +token, nuevoMarca);
 
             call.enqueue(new Callback<Void>() {
                 @Override

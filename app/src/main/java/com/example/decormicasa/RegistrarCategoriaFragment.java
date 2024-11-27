@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -61,14 +63,21 @@ public class RegistrarCategoriaFragment extends Fragment {
             Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
             return;
         }
-         /*if (!imagen.startsWith("http://") && !imagen.startsWith("https://")) {
+        if (!imagen.startsWith("http://") && !imagen.startsWith("https://")) {
             Toast.makeText(requireContext(), "Ingrese un enlace válido para la imagen, por ejemplo: https://imagen.jpg", Toast.LENGTH_SHORT).show();
             return;
-        }*/
+        }
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("tokenJWT", "");
+
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(requireContext(), "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         CategoriaRequest nuevoCategoria = new CategoriaRequest(nombre, descripcion, imagen);
 
-        Log.d("Producto JSON", nuevoCategoria.toString());
+        Log.d("Categoria JSON", nuevoCategoria.toString());
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(requireContext().getString(R.string.dominioservidor))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -77,7 +86,7 @@ public class RegistrarCategoriaFragment extends Fragment {
 
         decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
 
-        Call<Void> call = api.registrarCategoria(nuevoCategoria);
+        Call<Void> call = api.registrarCategoria("JWT " +token, nuevoCategoria);
 
         call.enqueue(new Callback<Void>() {
             @Override

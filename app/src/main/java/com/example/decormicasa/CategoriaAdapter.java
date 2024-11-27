@@ -1,7 +1,7 @@
 package com.example.decormicasa;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +55,7 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Cate
                 .load(categoria.getImagen())
                 .placeholder(R.drawable.loading_image)
                 .error(R.drawable.default_image)
-                .into(holder.imageProducto);
+                .into(holder.imageCategoria);
         holder.btnEditar.setOnClickListener(v -> {
             EditarCategoriaFragment editarFragment = EditarCategoriaFragment.newInstance(categoria);
 
@@ -74,9 +74,16 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Cate
             }
         });
     }
-    private void eliminarCategoria(Integer idProducto, int position) {
-        if (idProducto == null) {
+    private void eliminarCategoria(Integer idCategoria, int position) {
+        if (idCategoria == null) {
             Toast.makeText(context, "ID del categoria no válido", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        SharedPreferences sharedPreferences = context.getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("tokenJWT", "");
+
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(context, "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -86,7 +93,7 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Cate
                 .setMessage("¿Estás seguro de que deseas eliminar esta categoria?")
                 .setPositiveButton("Sí", (dialog, which) -> {
                     // Si el usuario confirma, proceder con la eliminación
-                    Call<Void> call = api.eliminarCategoria(idProducto);
+                    Call<Void> call = api.eliminarCategoria("JWT " + token, idCategoria);
                     call.enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
@@ -116,7 +123,7 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Cate
     public static class CategoriaViewHolder extends RecyclerView.ViewHolder {
         TextView nombreTextView, descripcionTextView, imgTextView;
         ImageButton btnEditar, btnEliminar;
-        ImageView imageProducto;
+        ImageView imageCategoria;
 
         public CategoriaViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -125,7 +132,7 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Cate
             imgTextView= itemView.findViewById(R.id.textImagen);
             btnEditar = itemView.findViewById(R.id.btnEditar);
             btnEliminar = itemView.findViewById(R.id.btnEliminar);
-            imageProducto = itemView.findViewById(R.id.imageProducto);
+            imageCategoria = itemView.findViewById(R.id.imageCategoria);
         }
     }
 }

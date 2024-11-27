@@ -1,5 +1,7 @@
 package com.example.decormicasa;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,7 +33,7 @@ public class EditarCategoriaFragment extends Fragment {
 
     private Button btnEditar, btnVolver;
     private Spinner spinnerEstado;
-    private int idProducto; // ID del producto a edit
+    private int idCategoria; // ID del producto a edit
 
     public EditarCategoriaFragment() {
     }
@@ -49,10 +51,10 @@ public class EditarCategoriaFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            // Recupera el producto completo desde los argumentos
-            CategoriaRequest producto = (CategoriaRequest) getArguments().getSerializable("categoria");
-            if (producto != null) {
-                idProducto = producto.getIdCategoria(); // Obtener el ID del producto
+            // Recupera el categoria completo desde los argumentos
+            CategoriaRequest categoria = (CategoriaRequest) getArguments().getSerializable("categoria");
+            if (categoria != null) {
+                idCategoria = categoria.getIdCategoria(); // Obtener el ID del categoria
             }
         }
     }
@@ -73,16 +75,16 @@ public class EditarCategoriaFragment extends Fragment {
         btnEditar = view.findViewById(R.id.btnEditar);
         btnVolver = view.findViewById(R.id.btnVolver);
 
-        // Si el producto es válido, llena los campos con los datos
+        // Si la categoria es válida, llena los campos con los datos
         if (getArguments() != null) {
-            CategoriaRequest producto = (CategoriaRequest) getArguments().getSerializable("categoria");
-            if (producto != null) {
-                mostrarDatosProducto(producto);
+            CategoriaRequest categoria = (CategoriaRequest) getArguments().getSerializable("categoria");
+            if (categoria != null) {
+                mostrarDatosCategoria(categoria);
             }
         }
 
-        // Acción del botón para editar el producto
-        btnEditar.setOnClickListener(v -> editarProducto(idProducto));
+        // Acción del botón para editar la categoria
+        btnEditar.setOnClickListener(v -> editarCategoria(idCategoria));
 
         // Configura el botón de volver
         btnVolver.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
@@ -90,25 +92,31 @@ public class EditarCategoriaFragment extends Fragment {
         return view;
     }
 
-    // Método para mostrar los datos del producto en los campos
-    private void mostrarDatosProducto(CategoriaRequest producto) {
-        editTextNombre.setText(producto.getNombre());
-        editTextDescripcion.setText(producto.getDescripcion());
+    // Método para mostrar los datos de la categoria en los campos
+    private void mostrarDatosCategoria(CategoriaRequest marca) {
+        editTextNombre.setText(marca.getNombre());
+        editTextDescripcion.setText(marca.getDescripcion());
 
 
-        editTextImagen.setText(producto.getImagen());
+        editTextImagen.setText(marca.getImagen());
 
     }
 
-    // Método para editar el producto
-    private void editarProducto(int id) {
+    // Método para editar la categoria
+    private void editarCategoria(int id) {
         String nombre = editTextNombre.getText().toString();
         String descripcion = editTextDescripcion.getText().toString();
         String imagen = editTextImagen.getText().toString();
 
-        CategoriaRequest producto = new CategoriaRequest(nombre, descripcion, imagen);
+        CategoriaRequest categoria = new CategoriaRequest(nombre, descripcion, imagen);
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("tokenJWT", "");
 
-        Log.d("Producto JSON", producto.toString());
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(requireContext(), "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        Log.d("Categoria JSON", categoria.toString());
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(requireContext().getString(R.string.dominioservidor))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -116,7 +124,7 @@ public class EditarCategoriaFragment extends Fragment {
 
         decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
 
-        Call<Void> call = api.actualizarCategoria(id, producto);
+        Call<Void> call = api.actualizarCategoria("JWT " +token, id, categoria);
 
         call.enqueue(new Callback<Void>() {
             @Override
