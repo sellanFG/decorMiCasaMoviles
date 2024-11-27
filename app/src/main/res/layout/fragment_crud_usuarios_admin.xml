@@ -13,14 +13,24 @@
         android:paddingBottom="16dp" />
 
     <!-- Botón de Registrar -->
-    <Button
+    <ImageButton
         android:id="@+id/btnRegistrarUsuario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
-        android:text="Nuevo Usuario"
+        android:src="@drawable/ic_add"
+        android:background="@drawable/rounded_button" />
+
+    <Button
+        android:id="@+id/btnVolver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="16dp"
+        android:text="Volver"
         android:textColor="@android:color/white"
         android:background="@drawable/rounded_button" />
 </RelativeLayout>
