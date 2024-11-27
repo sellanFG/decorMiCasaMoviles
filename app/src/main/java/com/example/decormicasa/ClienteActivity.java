@@ -67,7 +67,6 @@ import android.widget.PopupMenu;
 
 
 public class ClienteActivity extends AppCompatActivity {
-
     private DrawerLayout drawerLayout;
     private ImageButton btnMenu;
     List<CategoriaRequest> listaCategorias = new ArrayList<>();
@@ -81,7 +80,7 @@ public class ClienteActivity extends AppCompatActivity {
     HorizontalScrollView layoutFiltros;
     MaterialButton btnLimpiar;
     String modo;
-    ImageButton btnCarrito, btnFav, btnHome;
+    ImageButton btnCarrito, btnFav, btnHome, btnUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,13 +121,7 @@ public class ClienteActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 int id = menuItem.getItemId();
-
-                if (id == R.id.nav_categorias) {
-                    Intent intent = new Intent(ClienteActivity.this, CategoriasActivity.class);
-                    startActivity(intent);
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    return true;
-                } else if (id == R.id.nav_nosotros) {
+                if (id == R.id.nav_nosotros) {
                     Intent intent = new Intent(ClienteActivity.this, NosotrosActivity.class);
                     startActivity(intent);
                     drawerLayout.closeDrawer(GravityCompat.START);
@@ -140,6 +133,11 @@ public class ClienteActivity extends AppCompatActivity {
                     return true;
                 } else if (id == R.id.nav_mapa) {
                     Intent intent = new Intent(ClienteActivity.this, MapActivity.class);
+                    startActivity(intent);
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    return true;
+                } else if (id == R.id.nav_home) {
+                    Intent intent = new Intent(ClienteActivity.this, ClienteActivity.class);
                     startActivity(intent);
                     drawerLayout.closeDrawer(GravityCompat.START);
                     return true;
@@ -294,26 +292,31 @@ public class ClienteActivity extends AppCompatActivity {
         btnShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Aplicar animación al botón
                 Animation slideBounce = AnimationUtils.loadAnimation(ClienteActivity.this, R.anim.slide_bounce);
                 findViewById(R.id.btnShop).startAnimation(slideBounce);
 
-                v.postDelayed(() -> {
-                    // Ocultar vistas de Home y Favoritos
-                    layoutFiltros.setVisibility(View.GONE);
-                    txtTituloFavoritos.setVisibility(View.GONE);
-                    layoutProductos.setVisibility(View.GONE);
+                // Retraso para asegurar que la animación se ejecute antes de ocultar y mostrar vistas
+                v.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Ocultar vistas de Home y Favoritos
+                        layoutFiltros.setVisibility(View.GONE);
+                        txtTituloFavoritos.setVisibility(View.GONE);
+                        findViewById(R.id.layoutProductos).setVisibility(View.GONE);
 
-                    // Mostrar vistas de Pedidos
-                    findViewById(R.id.layoutPedidos).setVisibility(View.VISIBLE);
+                        // Mostrar vistas de Pedidos
+                        findViewById(R.id.layoutPedidos).setVisibility(View.VISIBLE);
 
-                    mostrarPedidos(); // Mostrar los pedidos
-                    modo = "pedidos"; // Cambiar el modo
-                }, 300); // Tiempo de la animación antes de mostrar el diálogo
+                        // Llamar a la función para mostrar los pedidos
+                        mostrarPedidos(); // Este método debe cargar los pedidos en el RecyclerView
+
+                        // Actualizar el estado de la pantalla (modo)
+                        modo = "pedidos";
+                    }
+                }, 300); // Tiempo de la animación antes de cambiar la visibilidad
             }
         });
-
-
-
 
 
         btnHome.setOnClickListener(new View.OnClickListener() {
@@ -350,16 +353,11 @@ public class ClienteActivity extends AppCompatActivity {
                     txtTituloFavoritos.setVisibility(View.VISIBLE);
 
                     mostrarFavoritos();
+                    layoutProductos.setVisibility(View.VISIBLE);
                     modo = "favoritos";
-                }, 300); 
+                }, 300);
             }
         });
-
-
-
-
-
-
 
         // Inicializar el botón de usuario
         ImageButton btnUsuario = findViewById(R.id.btnUsuario);
@@ -402,8 +400,53 @@ public class ClienteActivity extends AppCompatActivity {
             });
             popupMenu.show();
         });
+    }
 
+    private void inicializarComponentes() {
+        // Enlazar vistas
+        actvMarca = findViewById(R.id.actvMarca);
+        actvCategoria = findViewById(R.id.actvCategoria);
+        layoutProductos = findViewById(R.id.layoutProductos);
+        recyclerViewProductos = findViewById(R.id.recyclerViewProductos);
+        txtAviso = findViewById(R.id.txtAviso);
+        txtTituloFavoritos = findViewById(R.id.txtTituloFavoritos);
+        btnLimpiar = findViewById(R.id.btnLimpiar);
+        btnCarrito = findViewById(R.id.btnCarrito);
+        layoutFiltros = findViewById(R.id.layoutFiltros);
+        btnFav = findViewById(R.id.btnFav);
+        btnHome = findViewById(R.id.btnHome);
 
+        // Configuración del RecyclerView
+        productoClienteAdapter = new ProductoClienteAdapter(this, listaProductos);
+        recyclerViewProductos.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewProductos.setAdapter(productoClienteAdapter);
+
+        // Configurar SwipeRefreshLayout para actualizar datos
+        layoutProductos.setOnRefreshListener(() -> {
+            if ("listado".equals(modo)) {
+                mostrarProductos();
+            } else if ("favoritos".equals(modo)) {
+                mostrarFavoritos();
+            }
+            layoutProductos.setRefreshing(false);
+        });
+
+        // Configurar el botón de limpiar filtros
+        btnLimpiar.setOnClickListener(v -> {
+            actvCategoria.setText("");
+            actvCategoria.clearFocus();
+            actvMarca.setText("");
+            actvMarca.clearFocus();
+            mostrarProductos();
+        });
+
+        // Configuración inicial de productos
+        mostrarProductos();
+    }
+
+    private void setupNavigation() {
+        NavigationManager navigationManager = new NavigationManager(this);
+        navigationManager.setupNavigation();
     }
 
     private void cerrarSesion() {
@@ -431,9 +474,6 @@ public class ClienteActivity extends AppCompatActivity {
         // Mostrar el cuadro de diálogo
         builder.create().show();
     }
-
-
-
 
     @Override
     public void onBackPressed() {
@@ -575,6 +615,10 @@ public class ClienteActivity extends AppCompatActivity {
     }
 
     void mostrarProductos(){
+        layoutFiltros.setVisibility(View.VISIBLE);
+        txtTituloFavoritos.setVisibility(View.GONE);
+        listaProductos.clear();
+
         List<ProductoClienteRequest> marcas = new ArrayList<>();
 
         SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
@@ -701,25 +745,35 @@ public class ClienteActivity extends AppCompatActivity {
     }
 
     void mostrarFavoritos() {
-        listaProductos.clear();
+        listaProductos.clear();  // Asegúrate de limpiar la lista antes de agregar los nuevos datos
+
         SharedPreferences prefs = getSharedPreferences("FavoritosPrefs", MODE_PRIVATE);
         Set<String> favoritos = prefs.getStringSet("favoritos", new HashSet<>());
-        for (String productoString : favoritos) {
-            String params[] = productoString.split(";");
-            ProductoClienteRequest producto = new ProductoClienteRequest();
-            producto.setIdProducto(Integer.parseInt(params[0]));
-            producto.setNombre(params[1]);
-            producto.setStock(Integer.parseInt(params[2]));
-            producto.setPrecioVenta(Float.parseFloat(params[3]));
-            listaProductos.add(producto);
-        }
-        productoClienteAdapter.notifyDataSetChanged();
 
-        if (listaProductos.isEmpty()) {
-            txtAviso.setText("No hay productos favoritos");
+        if (favoritos != null && !favoritos.isEmpty()) {
+            for (String productoString : favoritos) {
+                String[] params = productoString.split(";");
+                ProductoClienteRequest producto = new ProductoClienteRequest();
+                producto.setIdProducto(Integer.parseInt(params[0]));
+                producto.setNombre(params[1]);
+                producto.setStock(Integer.parseInt(params[2]));
+                producto.setPrecioVenta(Float.parseFloat(params[3]));
+                listaProductos.add(producto);
+            }
+
+            // Asegúrate de actualizar el RecyclerView
+            productoClienteAdapter.notifyDataSetChanged();
+
+            // Si no hay productos en favoritos
+            if (listaProductos.isEmpty()) {
+                txtAviso.setText("No tienes productos favoritos.");
+                txtAviso.setVisibility(View.VISIBLE);
+            } else {
+                txtAviso.setVisibility(View.GONE);
+            }
+        } else {
+            txtAviso.setText("No hay favoritos guardados.");
             txtAviso.setVisibility(View.VISIBLE);
-        }else{
-            txtAviso.setVisibility(View.GONE);
         }
     }
 
@@ -741,5 +795,17 @@ public class ClienteActivity extends AppCompatActivity {
         view.startAnimation(slideBounce);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);  // Actualiza el Intent
+
+        String initialMode = intent.getStringExtra("initialMode");
+        if ("favoritos".equals(initialMode)) {
+            mostrarFavoritos();  // Llama al método para mostrar favoritos
+        } else {
+            mostrarProductos();  // Muestra la pantalla principal de productos
+        }
+    }
 }
 

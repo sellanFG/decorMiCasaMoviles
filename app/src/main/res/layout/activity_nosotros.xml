@@ -94,6 +94,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/TitleTextViewStyle"
                     android:layout_width="343dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

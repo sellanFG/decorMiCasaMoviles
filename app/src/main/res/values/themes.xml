@@ -1,14 +1,32 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Base application theme -->
     <style name="Base.Theme.DecorMiCasa" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
+        <!-- Personalización del tema claro -->
         <item name="colorPrimary">@color/naranja</item>
+        <!-- Configuración de fuente predeterminada -->
+        <item name="android:fontFamily">@font/poppins_regular</item>
+        <item name="fontFamily">@font/poppins_regular</item>
     </style>
 
     <style name="Theme.DecorMiCasa" parent="Base.Theme.DecorMiCasa" />
+
+    <!-- Estilo personalizado para botones -->
     <style name="CustomButtonStyle">
         <item name="android:background">@color/primaryBlue</item> <!-- Cambia este a un color específico si lo deseas -->
         <item name="android:textColor">@color/yellowAccent</item> <!-- Cambia esto si deseas otro color -->
         <item name="android:padding">8dp</item> <!-- Espaciado del botón -->
+        <item name="android:fontFamily">@font/poppins_bold</item> <!-- Fuente personalizada para botones -->
+    </style>
+    <style name="TitleTextViewStyle">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+    <style name="TitleTextViewStyleBlack">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textAlignment">center</item>
     </style>
 </resources>

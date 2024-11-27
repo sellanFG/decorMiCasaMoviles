@@ -21,13 +21,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 int id = item.getItemId();
-
-                if (id == R.id.nav_categorias) {
-                    Intent intent = new Intent(MainActivity.this, CategoriasActivity.class);
-                    startActivity(intent);
-                    drawerLayout.closeDrawers();
-                    return true;
-                }
                 drawerLayout.closeDrawers();
                 return false;
             }

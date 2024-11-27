@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,7 +37,7 @@ public class CrudUsuariosFragment extends Fragment {
     private RecyclerView recyclerView;
     private UsuariosAdapter adapter;
     private List<UsuarioRequest> usuarios;
-    private Button btnRegistrarUsuario;
+    private Button btnRegistrarUsuario, btnVolver;
 
     @Nullable
     @Override
@@ -45,6 +46,7 @@ public class CrudUsuariosFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recyclerViewUsuarios);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        btnVolver = view.findViewById(R.id.btnVolver);
 
         usuarios = new ArrayList<>();
 
@@ -70,7 +72,7 @@ public class CrudUsuariosFragment extends Fragment {
 
         obtener_empleados(api, token);
 
-        btnRegistrarUsuario = view.findViewById(R.id.btnRegistrarUsuario);
+       AppCompatImageButton btnRegistrarUsuario = view.findViewById(R.id.btnRegistrarUsuario);
         btnRegistrarUsuario.setOnClickListener(v -> {
             try {
                 requireActivity().getSupportFragmentManager().beginTransaction()
@@ -82,6 +84,7 @@ public class CrudUsuariosFragment extends Fragment {
                 Toast.makeText(getContext(), "Error al abrir el registro de usuario", Toast.LENGTH_SHORT).show();
             }
         });
+        btnVolver.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
         return view;
     }

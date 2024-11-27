@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
+    private NavigationManager navigationManager;
     private ImageButton btnMenu;
     private DrawerLayout drawerLayout;
     private GoogleMap mMap;
@@ -30,6 +31,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mapa);
+
+        // Inicializar el NavigationManager después de setContentView
+        navigationManager = new NavigationManager(this);
+        navigationManager.setupNavigation();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -62,12 +67,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 int id = menuItem.getItemId();
 
-                if (id == R.id.nav_categorias) {
-                    Intent intent = new Intent(MapActivity.this, CategoriasActivity.class);
-                    startActivity(intent);
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    return true;
-                } else if (id == R.id.nav_nosotros) {
+                if (id == R.id.nav_nosotros) {
                     Intent intent = new Intent(MapActivity.this, NosotrosActivity.class);
                     startActivity(intent);
                     drawerLayout.closeDrawer(GravityCompat.START);
@@ -82,6 +82,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     startActivity(intent);
                     drawerLayout.closeDrawer(GravityCompat.START);
                     return true;
+                } else if (id == R.id.nav_home) {
+                    Intent intent = new Intent(MapActivity.this, ClienteActivity.class);
+                    startActivity(intent);
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    return true;
                 }
                 return false;
             }
@@ -93,6 +98,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        navigationManager.handleBackPress();
     }
 
     @Override

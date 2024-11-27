@@ -1,5 +1,6 @@
 package com.example.decormicasa;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,13 +85,22 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
             return;
         }
 
+        // Obtén el token desde SharedPreferences
+        SharedPreferences sharedPreferences = context.getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("tokenJWT", "");
+
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(context, "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         // Crear el AlertDialog de confirmación
         new android.app.AlertDialog.Builder(context)
                 .setTitle("Confirmación")
                 .setMessage("¿Estás seguro de que deseas eliminar este producto?")
                 .setPositiveButton("Sí", (dialog, which) -> {
                     // Si el usuario confirma, proceder con la eliminación
-                    Call<Void> call = api.eliminarProducto(idProducto);
+                    Call<Void> call = api.eliminarProducto("JWT " + token, idProducto);
                     call.enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
@@ -99,7 +109,6 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
                                 notifyItemRemoved(position);
                                 Toast.makeText(context, "Producto eliminado", Toast.LENGTH_SHORT).show();
                             } else {
-                                // Imprime detalles de la respuesta
                                 Log.d("ProductosAdapter", "Error al eliminar producto: " + response.code() + " - " + response.message());
                                 Toast.makeText(context, "Error al eliminar producto", Toast.LENGTH_SHORT).show();
                             }
@@ -114,6 +123,7 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
                 .setNegativeButton("No", null) // Si el usuario cancela, no hacer nada
                 .show();
     }
+
 
 
     public static class ProductoViewHolder extends RecyclerView.ViewHolder {
