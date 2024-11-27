@@ -47,13 +47,13 @@ public interface decorMiCasaApi {
     Call<ProductRequest> obtenerProductoPorId(@Path("id") int idProducto);
 
     @POST("registrarProducto")
-    Call<Void> registrarProducto(@Body ProductRequest nuevoProducto);
+    Call<Void> registrarProducto(@Header("Authorization") String authorization,@Body ProductRequest nuevoProducto);
 
     @POST("editarProducto/{id}")
-    Call<Void> editarProducto(@Path("id") int id, @Body ProductRequest producto);
+    Call<Void> editarProducto(@Header("Authorization") String authorization,@Path("id") int id, @Body ProductRequest producto);
 
     @DELETE("eliminarProducto/{id}")
-    Call<Void> eliminarProducto(@Path("id") int id);
+    Call<Void> eliminarProducto(@Header("Authorization") String authorization,@Path("id") int id);
 
     @GET("api_obtenercategorias")
     Call<List<CategoriaRequest>> obtenercategorias(@Header("Authorization") String authorization);

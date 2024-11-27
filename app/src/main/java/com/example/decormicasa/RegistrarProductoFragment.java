@@ -1,5 +1,7 @@
 package com.example.decormicasa;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -81,6 +83,14 @@ public class RegistrarProductoFragment extends Fragment {
             return;
         }
 
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("tokenJWT", "");
+
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(requireContext(), "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         try {
             Float precioCompra = Float.parseFloat(precioCompraStr);
             Float precioVenta = Float.parseFloat(precioVentaStr);
@@ -97,7 +107,7 @@ public class RegistrarProductoFragment extends Fragment {
 
             decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
 
-            Call<Void> call = api.registrarProducto(nuevoProducto);
+            Call<Void> call = api.registrarProducto("JWT " +token,nuevoProducto);
 
             call.enqueue(new Callback<Void>() {
                 @Override

@@ -1,5 +1,7 @@
 package com.example.decormicasa;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -32,6 +34,8 @@ public class EditarProductoFragment extends Fragment {
     private Button btnEditar, btnVolver;
     private Spinner spinnerEstado;
     private int idProducto; // ID del producto a editar
+
+
 
     public EditarProductoFragment() {
     }
@@ -76,6 +80,10 @@ public class EditarProductoFragment extends Fragment {
         btnEditar = view.findViewById(R.id.btnEditar);
         btnVolver = view.findViewById(R.id.btnVolver);
 
+
+
+
+
         if (getArguments() != null) {
             ProductRequest producto = (ProductRequest) getArguments().getSerializable("producto");
             if (producto != null) {
@@ -111,6 +119,7 @@ public class EditarProductoFragment extends Fragment {
         }
     }
 
+
     // Método para editar el producto
     private void editarProducto(int id) {
         String nombre = editTextNombre.getText().toString();
@@ -127,6 +136,14 @@ public class EditarProductoFragment extends Fragment {
 
         ProductRequest producto = new ProductRequest(nombre, descripcion, precioCompra, precioVenta, stock, imagen, estado, caracteristicas, usos, idMarca);
 
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("tokenJWT", "");
+
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(requireContext(), "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         Log.d("Producto JSON", producto.toString());
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(requireContext().getString(R.string.dominioservidor))
@@ -135,7 +152,7 @@ public class EditarProductoFragment extends Fragment {
 
         decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
 
-        Call<Void> call = api.editarProducto(id, producto);
+        Call<Void> call = api.editarProducto("JWT " +token,id, producto);
 
         call.enqueue(new Callback<Void>() {
             @Override
