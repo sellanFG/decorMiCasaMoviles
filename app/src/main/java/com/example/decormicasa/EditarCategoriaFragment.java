@@ -33,7 +33,7 @@ public class EditarCategoriaFragment extends Fragment {
 
     private Button btnEditar, btnVolver;
     private Spinner spinnerEstado;
-    private int idCategoria; // ID del producto a edit
+    private int idCategoria; // ID de la cateogira a edit
 
     public EditarCategoriaFragment() {
     }
