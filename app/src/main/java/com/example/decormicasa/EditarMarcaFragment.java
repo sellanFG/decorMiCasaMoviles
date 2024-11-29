@@ -9,9 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
-
+import com.bumptech.glide.Glide;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -34,7 +35,9 @@ public class EditarMarcaFragment extends Fragment {
             editTextCaracteristicas, editTextUsos, editTextIdCategoria;
     private Button btnEditar, btnVolver;
     private Spinner spinnerEstado;
-    private int idMarca; // ID de la marca a editar
+    private int idMarca;// ID de la marca a editar
+    private Context context;
+    ImageView imageMarca;
 
     public EditarMarcaFragment() {
     }
@@ -73,7 +76,7 @@ public class EditarMarcaFragment extends Fragment {
         editTextImagen = view.findViewById(R.id.editTextImagen);
         btnEditar = view.findViewById(R.id.btnEditar);
         btnVolver = view.findViewById(R.id.btnVolver);
-
+        //imageMarca = view.findViewById(R.id.EditimageViewMarca);
         if (getArguments() != null) {
             MarcasRequest marca = (MarcasRequest) getArguments().getSerializable("marca");
             if (marca != null) {
@@ -94,6 +97,17 @@ public class EditarMarcaFragment extends Fragment {
         editTextDescripcion.setText(marca.getDescripcion());
         editTextIdCategoria.setText(String.valueOf(marca.getIdCategoria()));
         editTextImagen.setText(marca.getImagen());
+        String imageUrl = marca.getImagen();
+        /*if (imageUrl != null && !imageUrl.isEmpty()) {
+            Glide.with(context)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.loading_image)
+                    .error(R.drawable.default_image)
+                    .into(holder.imageMarca);
+        } else {
+            // Si la URL es nula, cargar una imagen por defecto
+            holder.imageMarca.setImageResource(R.drawable.default_image);
+        }*/
 
     }
 

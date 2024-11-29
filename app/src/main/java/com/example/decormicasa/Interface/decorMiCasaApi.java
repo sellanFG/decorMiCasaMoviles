@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import com.example.decormicasa.model.AuthRequest;
 import com.example.decormicasa.model.AuthResponse;
 import com.example.decormicasa.model.CategoriaRequest;
+import com.example.decormicasa.model.ImagenResponse;
 import com.example.decormicasa.model.MarcaRequest;
 import com.example.decormicasa.model.MarcasRequest;
 import com.example.decormicasa.model.PedidoRequest;
@@ -19,6 +20,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -26,8 +28,10 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface decorMiCasaApi {
@@ -116,4 +120,9 @@ public interface decorMiCasaApi {
 
     @DELETE("eliminar_empleado/{id}")
     Call<Void> eliminarEmpleado(@Header("Authorization") String token, @Path("id") int id);
+
+    // Método para cargar imágenes (subir imágenes)
+    @Multipart
+    @POST("/api/upload-imagen")  // Asegúrate de que esta URL coincida con la del servidor
+    Call<ImagenResponse> subirImagen(@Part MultipartBody.Part file);
 }
