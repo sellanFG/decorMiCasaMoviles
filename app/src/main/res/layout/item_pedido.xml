@@ -2,38 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#34696969"
     android:layout_marginBottom="8dp"
-    android:elevation="2dp">
+    android:background="#FFFACD"
+    android:elevation="2dp"
+    android:orientation="vertical"
+    android:padding="16dp">
+
     <TextView
         android:id="@+id/textIdPedido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Pedido #1"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"
-        android:textSize="16sp" />
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
     <TextView
         android:id="@+id/textFechaPedido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:text="Fecha: 2024-11-20"
-        android:textColor="@android:color/white"
-        android:layout_marginTop="4dp" />
+        android:textColor="@color/black" />
+
     <TextView
         android:id="@+id/textTotal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
+        android:layout_marginTop="4dp"
         android:text="Total: S/150.50"
-        android:layout_marginTop="4dp" />
+        android:textColor="@color/black" />
+
     <TextView
         android:id="@+id/textEstado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
+        android:layout_marginTop="4dp"
         android:text="Estado: Pendiente"
-        android:layout_marginTop="4dp" />
+        android:textColor="@color/black" />
 </LinearLayout>
