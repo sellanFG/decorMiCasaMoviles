@@ -91,6 +91,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textUri" />
+
+                <Button
+                    android:id="@+id/btnEditSeleccionarImagen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Seleccionar Imagen" />
+
+                <ImageView
+                    android:id="@+id/EditimageViewMarca"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/default_image"
+                    android:contentDescription="Imagen de la marca" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout

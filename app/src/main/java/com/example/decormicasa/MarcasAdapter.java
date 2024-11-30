@@ -1,7 +1,10 @@
 package com.example.decormicasa;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +37,7 @@ public class MarcasAdapter extends RecyclerView.Adapter<MarcasAdapter.MarcaViewH
     private Context context;
     private String token;
     private FragmentManager fragmentManager;
+
 
     public MarcasAdapter(List<MarcasRequest> marcas, decorMiCasaApi api, Context context, String token, FragmentManager fragmentManager) {
         this.marca = marcas;
@@ -85,6 +92,8 @@ public class MarcasAdapter extends RecyclerView.Adapter<MarcasAdapter.MarcaViewH
     public int getItemCount() {
         return marca.size();
     }
+
+
 
     private void eliminarMarca(int position, Integer idMarca) {
         if (idMarca == null) {
