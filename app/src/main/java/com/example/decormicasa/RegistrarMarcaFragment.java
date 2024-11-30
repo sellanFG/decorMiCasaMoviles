@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import com.bumptech.glide.Glide;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.example.decormicasa.Interface.decorMiCasaApi;
@@ -30,6 +32,7 @@ import com.example.decormicasa.model.MarcasRequest;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 
 import okhttp3.MediaType;
@@ -44,12 +47,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RegistrarMarcaFragment extends Fragment {
 
     private EditText editTextNombre, editTextDescripcion,
-             editTextIdCategoria, editTextImagen;
-    private Button btnRegistrar, btnVolver, btnSeleccionarImagen;
+            editTextIdCategoria, editTextImagen;
+    private Button btnRegistrar, btnVolver, btnSeleccionarImagen, btnTomarFoto;
     private Spinner spinnerEstado;
     private ActivityResultLauncher<Intent> seleccionarImagenLauncher;
     private Uri imagenSeleccionadaUri;
     private ImageView imageViewMarca;
+    private Uri fotoUri;
+    private ActivityResultLauncher<Uri> tomarFotoLauncher;
+
+
+
 
     public RegistrarMarcaFragment() {
     }
@@ -66,6 +74,7 @@ public class RegistrarMarcaFragment extends Fragment {
         editTextImagen = view.findViewById(R.id.editTextImagen);
         btnRegistrar = view.findViewById(R.id.btnRegistrar);
         btnVolver = view.findViewById(R.id.btnVolver);
+        btnTomarFoto = view.findViewById(R.id.btnTomarFoto);
         btnSeleccionarImagen = view.findViewById(R.id.btnSeleccionarImagen);
         imageViewMarca = view.findViewById(R.id.imageViewMarca);
         // Configurar el launcher para seleccionar imágenes
@@ -78,8 +87,21 @@ public class RegistrarMarcaFragment extends Fragment {
                     }
                 }
         );
+        // Configurar el launcher para tomar fotos
+        tomarFotoLauncher = registerForActivityResult(
+                new ActivityResultContracts.TakePicture(),
+                isPhotoTaken -> {
+                    if (isPhotoTaken) {
+                        mostrarImagenSeleccionada(imagenSeleccionadaUri);
+                    } else {
+                        Toast.makeText(requireContext(), "Foto no tomada", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
         // Configurar el click para seleccionar imagen
         btnSeleccionarImagen.setOnClickListener(v -> abrirGaleria());
+        // Configurar el botón para tomar fotos
+        btnTomarFoto.setOnClickListener(v -> tomarFoto());
         btnRegistrar.setOnClickListener(v -> registrarMarca());
         btnVolver.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
@@ -92,16 +114,42 @@ public class RegistrarMarcaFragment extends Fragment {
         seleccionarImagenLauncher.launch(intent);
     }
 
-    // Método para mostrar la imagen seleccionada en el ImageView
-    private void mostrarImagenSeleccionada(Uri imagenUri) {
-        Glide.with(this)
-                .load(imagenUri)
+    // Método para tomar foto
+    private void tomarFoto() {
+        try {
+            File archivoFoto = new File(
+                    requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                    "marca_" + System.currentTimeMillis() + ".jpg"
+            );
+
+            if (!archivoFoto.exists() && !archivoFoto.createNewFile()) {
+                Toast.makeText(requireContext(), "Error al crear archivo temporal", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            imagenSeleccionadaUri = FileProvider.getUriForFile(
+                    requireContext(),
+                    "com.example.decormicasa.fileprovider",
+                    archivoFoto
+            );
+
+            tomarFotoLauncher.launch(imagenSeleccionadaUri);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(requireContext(), "Error al crear el archivo de imagen", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+        // Método para mostrar la imagen seleccionada en el ImageView
+    private void mostrarImagenSeleccionada(Uri uri) {
+        Glide.with(requireContext())
+                .load(uri)
                 .placeholder(R.drawable.loading_image)
                 .error(R.drawable.default_image)
                 .into(imageViewMarca);
     }
-
-
 
     private void registrarMarca() {
         String nombre = editTextNombre.getText().toString().trim();
@@ -129,10 +177,18 @@ public class RegistrarMarcaFragment extends Fragment {
 
         try {
 
+            // Leer el contenido de la URI directamente
+            InputStream inputStream = requireContext().getContentResolver().openInputStream(imagenSeleccionadaUri);
+            byte[] bytes = new byte[inputStream.available()];
+            inputStream.read(bytes);
+            inputStream.close();
+            // Generar un nombre único para la imagen
+            String nombreArchivoUnico = "marca_" + System.currentTimeMillis() + ".jpg";
 
-            File archivoImagen = new File(getRealPathFromURI(imagenSeleccionadaUri));
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), archivoImagen);
-            MultipartBody.Part body = MultipartBody.Part.createFormData("file", archivoImagen.getName(), requestFile);
+
+            // Crear el RequestBody usando el contenido del archivo
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), bytes);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("file", nombreArchivoUnico, requestFile);
 
 
             Retrofit retrofit = new Retrofit.Builder()
@@ -173,8 +229,10 @@ public class RegistrarMarcaFragment extends Fragment {
             });
 
         } catch (Exception e) {
-            Toast.makeText(requireContext(), "Error al registrar la marca", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+            Toast.makeText(requireContext(), "Error al registrar la marca: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+
 
     }
     private void registrarMarcaConImagen(String nombre, String descripcion, String idCategoriaStr, String urlImagen) {

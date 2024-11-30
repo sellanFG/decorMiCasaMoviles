@@ -96,6 +96,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Seleccionar Imagen" />
+            <Button
+                android:id="@+id/btnTomarFoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seleccionar Imagen" />
             <ImageView
                 android:id="@+id/imageViewMarca"
                 android:layout_width="100dp"
