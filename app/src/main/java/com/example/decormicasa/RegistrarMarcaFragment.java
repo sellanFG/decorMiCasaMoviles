@@ -151,6 +151,7 @@ public class RegistrarMarcaFragment extends Fragment {
                 .into(imageViewMarca);
     }
 
+
     private void registrarMarca() {
         String nombre = editTextNombre.getText().toString().trim();
         String descripcion = editTextDescripcion.getText().toString().trim();

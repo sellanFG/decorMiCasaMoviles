@@ -91,23 +91,37 @@
                     android:layout_height="wrap_content"
                     android:inputType="textUri" />
             </com.google.android.material.textfield.TextInputLayout>
-            <Button
-                android:id="@+id/btnSeleccionarImagen"
-                android:layout_width="wrap_content"
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Seleccionar Imagen" />
-            <Button
-                android:id="@+id/btnTomarFoto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Seleccionar Imagen" />
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="16dp">
+
+                <Button
+                    android:id="@+id/btnSeleccionarImagen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Seleccionar Imagen"
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/btnTomarFoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tomar foto" />
+            </LinearLayout>
+
             <ImageView
                 android:id="@+id/imageViewMarca"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="20dp"
+                android:layout_gravity="center"
                 android:src="@drawable/default_image"
                 android:contentDescription="Imagen de la marca" />
+
 
 
             <!-- Contenedor horizontal para los botones -->
