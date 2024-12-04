@@ -128,6 +128,8 @@ public class LoginActivity extends AppCompatActivity {
         AuthRequest authRequest = new AuthRequest();
         authRequest.setUsername(username);
         authRequest.setPassword(password);
+        String baseUrl = getString(R.string.dominioservidor);
+        Log.d("URL_DEBUG", "Base URL utilizada: " + baseUrl);
 
         Call<AuthResponse> call = decorMiCasaApi.autenticar(authRequest);
         call.enqueue(new Callback<AuthResponse>() {
@@ -177,7 +179,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<AuthResponse> call, Throwable t) {
                 binding.loading.setVisibility(View.INVISIBLE);
-                Toast.makeText(LoginActivity.this, "Error de red: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                String errorMessage = t.getMessage();
+                // Mostrar un mensaje en un Toast
+                Toast.makeText(LoginActivity.this, "E: " + errorMessage, Toast.LENGTH_LONG).show();
+
+                // Imprimir el error en el Logcat
+                Log.e("API Error", "Error Message: " + t.getMessage());
+
             }
         });
     }
