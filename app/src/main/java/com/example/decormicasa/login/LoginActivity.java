@@ -5,14 +5,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,6 +33,14 @@ import com.example.decormicasa.model.MetodoEnc;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
+
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     String token;
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
+    private String storedVerificationId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,8 +141,6 @@ public class LoginActivity extends AppCompatActivity {
         AuthRequest authRequest = new AuthRequest();
         authRequest.setUsername(username);
         authRequest.setPassword(password);
-        String baseUrl = getString(R.string.dominioservidor);
-        Log.d("URL_DEBUG", "Base URL utilizada: " + baseUrl);
 
         Call<AuthResponse> call = decorMiCasaApi.autenticar(authRequest);
         call.enqueue(new Callback<AuthResponse>() {
@@ -164,9 +175,11 @@ public class LoginActivity extends AppCompatActivity {
 
                 // Redireccionar según el rol
                 if ("cliente".equalsIgnoreCase(userRole)) {
-                    Intent intent = new Intent(LoginActivity.this, ClienteActivity.class);
-                    startActivity(intent);
-                    finish(); // Finalizar la actividad de inicio de sesión
+                    //auth por telefono solo en cliente
+                    mostrarDialogoTelefono();
+                    //Intent intent = new Intent(LoginActivity.this, ClienteActivity.class);
+                    //startActivity(intent);
+                    //finish(); // Finalizar la actividad de inicio de sesión
                 } else if ("administrador".equalsIgnoreCase(userRole)) {
                     Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
                     startActivity(intent);
@@ -179,13 +192,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<AuthResponse> call, Throwable t) {
                 binding.loading.setVisibility(View.INVISIBLE);
-                String errorMessage = t.getMessage();
-                // Mostrar un mensaje en un Toast
-                Toast.makeText(LoginActivity.this, "E: " + errorMessage, Toast.LENGTH_LONG).show();
-
-                // Imprimir el error en el Logcat
-                Log.e("API Error", "Error Message: " + t.getMessage());
-
+                Toast.makeText(LoginActivity.this, "Error de red: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -200,4 +207,112 @@ public class LoginActivity extends AppCompatActivity {
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
+
+    private void mostrarDialogoTelefono() {
+        // Mostrar un cuadro de diálogo para que el usuario ingrese su número de teléfono
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Ingresa tu número de teléfono");
+
+        final EditText telefonoInput = new EditText(this);
+        telefonoInput.setInputType(InputType.TYPE_CLASS_PHONE);
+        telefonoInput.setHint("+51");
+        builder.setView(telefonoInput);
+
+        builder.setPositiveButton("Enviar código", (dialog, which) -> {
+            String numeroTelefono = telefonoInput.getText().toString();
+            if (!numeroTelefono.isEmpty()) {
+                // Llamar a la función que envía el código SMS
+                if (!numeroTelefono.startsWith("+")) {
+                    numeroTelefono = "+51" + numeroTelefono; // Añade el código de país si no lo tiene
+                }
+                iniciarSesionConTelefono(numeroTelefono);
+            } else {
+                Toast.makeText(LoginActivity.this, "Por favor, ingrese un número de teléfono válido.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
+        builder.show();
+    }
+
+    private void iniciarSesionConTelefono(String numeroTelefono) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        // Paso 1: Iniciar la autenticación telefónica
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(mAuth)
+                .setPhoneNumber(numeroTelefono)
+                .setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(this)
+                .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                    @Override
+                    public void onVerificationCompleted(PhoneAuthCredential credential) {
+                        // Verificación automática exitosa
+                        signInWithPhoneAuthCredential(credential);
+                    }
+
+                    @Override
+                    public void onVerificationFailed(FirebaseException e) {
+                        // Manejar errores de verificación
+                        Toast.makeText(LoginActivity.this, "Error en la verificación telefónica: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
+                        // El código fue enviado, guarda el verificationId
+                        Toast.makeText(LoginActivity.this, "Código enviado", Toast.LENGTH_SHORT).show();
+                        storedVerificationId = verificationId;
+                        mostrarDialogoCodigoSMS();
+                    }
+                })
+                .requireSmsValidation(false)
+                .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
+    }
+
+    private void mostrarDialogoCodigoSMS() {
+        // Mostrar dialog de ingreso del código SMS
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Ingresa el código SMS");
+
+        final EditText codigoInput = new EditText(this);
+        codigoInput.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(codigoInput);
+
+        builder.setPositiveButton("Verificar", (dialog, which) -> {
+            String codigoSMS = codigoInput.getText().toString();
+            if (!codigoSMS.isEmpty()) {
+                // Verificar el código SMS
+                verificarCodigoSMS(codigoSMS);
+            } else {
+                Toast.makeText(LoginActivity.this, "Por favor, ingrese el código recibido.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
+        builder.show();
+    }
+
+    private void verificarCodigoSMS(String codigoIngresado) {
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(storedVerificationId, codigoIngresado);
+        signInWithPhoneAuthCredential(credential);
+    }
+
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = task.getResult().getUser();
+                        // Si es exitosa, redirige
+                        Toast.makeText(LoginActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LoginActivity.this, ClienteActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Error en el inicio de sesión: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
 }

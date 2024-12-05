@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "901167980560",
+    "project_id": "decorfinal-a369d",
+    "storage_bucket": "decorfinal-a369d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901167980560:android:0caf4990fd7fedb1552a95",
+        "android_client_info": {
+          "package_name": "com.example.decormicasa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4GX_xBwKvPxSTuraG-qEg810wH3ASqRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
