@@ -71,7 +71,7 @@ public class RegistrarMarcaFragment extends Fragment {
         editTextDescripcion = view.findViewById(R.id.editTextDescripcion);
 
         editTextIdCategoria = view.findViewById(R.id.editTextIdCategoria);
-        editTextImagen = view.findViewById(R.id.editTextImagen);
+        //editTextImagen = view.findViewById(R.id.editTextImagen);
         btnRegistrar = view.findViewById(R.id.btnRegistrar);
         btnVolver = view.findViewById(R.id.btnVolver);
         btnTomarFoto = view.findViewById(R.id.btnTomarFoto);

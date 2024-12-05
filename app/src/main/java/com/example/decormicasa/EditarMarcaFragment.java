@@ -206,6 +206,8 @@ public class EditarMarcaFragment extends Fragment {
         String descripcion = editTextDescripcion.getText().toString();
         Integer idCategoria = Integer.parseInt(editTextIdCategoria.getText().toString());
         String imagenUrl = editTextImagen.getText().toString();
+        //String imagenUrl = editTextImagen.getText().toString();
+
         // Si hay una nueva imagen seleccionada o tomada, subirla y usar la nueva URL
         if (imagenSeleccionadaUri != null) {
             subirImagenYActualizarMarca(nombre, descripcion, idCategoria, id);
