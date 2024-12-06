@@ -20,6 +20,7 @@ public class TokenManager {
     private Context context;
     private CountDownTimer timer;
     private TokenExpirationListener listener;
+    private boolean warningShown = false;
 
     public interface TokenExpirationListener {
         void onTokenWarning(long timeRemaining);
@@ -49,18 +50,22 @@ public class TokenManager {
             return;
         }
 
+        warningShown = false; // Reinicia la bandera al iniciar un nuevo temporizador
+
         timer = new CountDownTimer(timeUntilExpiration, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                if (millisUntilFinished <= WARNING_TIME) {
+                if (!warningShown && millisUntilFinished <= WARNING_TIME) {
+                    warningShown = true; // Marca que ya se mostró la advertencia
                     listener.onTokenWarning(millisUntilFinished);
                 }
             }
-
             @Override
             public void onFinish() {
-                listener.onTokenExpired();
-                logout();
+                // Solo cerrar sesión si no se ha mostrado el diálogo o si el token realmente expiró
+                if (warningShown) {
+                    listener.onTokenExpired();
+                }
             }
         }.start();
     }
@@ -86,7 +91,7 @@ public class TokenManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();
-
+        // Redirigir al login
         Intent intent = new Intent(context, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
@@ -99,6 +104,7 @@ public class TokenManager {
     public void stopTimer() {
         if (timer != null) {
             timer.cancel();
+            timer = null;
         }
     }
 }

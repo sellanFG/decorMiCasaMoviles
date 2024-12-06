@@ -4,26 +4,44 @@ public class AuthResponse {
     private String access_token;
     private String rol;
     private int id;// Agregar campo para el rol
+    private String telefono;
 
-    // Constructor
-    public AuthResponse(String access_token, String rol, int id) {
+    public AuthResponse(String access_token, String rol, int id, String telefono) {
         this.access_token = access_token;
         this.rol = rol;
         this.id = id;
+        this.telefono = telefono;
     }
 
-    // Getter para el access_token
     public String getAccess_token() {
         return access_token;
     }
 
-    // Getter para el rol
     public String getRol() {
-        return rol; // Devolver el rol
+        return rol;
     }
 
-    // Getter para el id
     public int getId() {
-        return id; // Devolver el id
+        return id;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setAccess_token(String access_token) {
+        this.access_token = access_token;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 }

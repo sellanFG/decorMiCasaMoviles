@@ -14,7 +14,6 @@ import com.example.decormicasa.model.User;
 import com.example.decormicasa.model.UserResponse;
 import com.example.decormicasa.model.UsuarioRequest;
 import com.example.decormicasa.model.ProductoClienteRequest;
-import com.example.decormicasa.utils.RefreshTokenRequest;
 import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
@@ -126,10 +125,4 @@ public interface decorMiCasaApi {
     @Multipart
     @POST("/api/upload-imagen")  // Asegúrate de que esta URL coincida con la del servidor
     Call<ImagenResponse> subirImagen(@Part MultipartBody.Part file);
-
-    // @GET("usuarios/verificar-telefono")
-    // Call<Boolean> verificarTelefonoConEmail(@Query("email") String email, @Query("numeroTelefono") String numeroTelefono);
-
-    @POST("refresh-token") // Ajusta la ruta según tu API
-    Call<AuthResponse> refreshToken(@Body RefreshTokenRequest request);
 }

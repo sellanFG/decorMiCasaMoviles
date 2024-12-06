@@ -1,22 +1,26 @@
 package com.example.decormicasa;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.decormicasa.login.LoginActivity;
+import com.example.decormicasa.utils.TokenManager;
 import com.google.android.material.button.MaterialButton;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-public class AdminActivity extends AppCompatActivity {
+public class AdminActivity extends AppCompatActivity implements TokenManager.TokenExpirationListener {
 
     private static final String TAG = "AdminActivity";
     private ImageButton btnUsuario;
+    private TokenManager tokenManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,18 @@ public class AdminActivity extends AppCompatActivity {
         if (btnProductos == null || gridOptions == null || fragmentContainer == null || btnUsuario == null || btnEmpleado == null) {
             Log.e(TAG, "Error al obtener las vistas");
             return;
+        }
+
+        // Inicializar TokenManager
+        tokenManager = new TokenManager(this, this);
+
+        // Obtener token de SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", MODE_PRIVATE);
+        String token = sharedPreferences.getString("tokenJWT", "");
+
+        // Iniciar el timer
+        if (!token.isEmpty()) {
+            tokenManager.startTokenExpirationTimer(token);
         }
 
         // Acción al presionar el botón de productos
@@ -128,5 +144,33 @@ public class AdminActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LoginActivity.class); // Cambia a la actividad de login
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onTokenWarning(long timeRemaining) {
+        int minutesRemaining = (int) (timeRemaining / (1000 * 60));
+
+        new android.app.AlertDialog.Builder(this)
+                .setTitle("Sesión por expirar")
+                .setMessage("Tu sesión expirará en " + minutesRemaining + " minutos.")
+                .setNegativeButton("Cerrar sesión", (dialog, which) -> {
+                    // Cerrar sesión automáticamente
+                    tokenManager.logout();
+                })
+                .setCancelable(true)
+                .create() // Crea el AlertDialog
+                .show(); // Muestra el diálogo
+    }
+
+    @Override
+    public void onTokenExpired() {
+        Toast.makeText(this, "Tu sesión ha expirado", Toast.LENGTH_LONG).show();
+        tokenManager.logout();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        tokenManager.stopTimer();
     }
 }
