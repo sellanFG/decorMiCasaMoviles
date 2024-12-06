@@ -4,6 +4,7 @@ import static java.security.AccessController.getContext;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,10 +40,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.decormicasa.Interface.decorMiCasaApi;
 import com.example.decormicasa.login.LoginActivity;
+import com.example.decormicasa.model.AuthResponse;
 import com.example.decormicasa.model.CategoriaRequest;
 import com.example.decormicasa.model.MarcaRequest;
 import com.example.decormicasa.model.PedidoRequest;
 import com.example.decormicasa.model.ProductoClienteRequest;
+import com.example.decormicasa.utils.RefreshTokenRequest;
+import com.example.decormicasa.utils.TokenManager;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
@@ -66,7 +70,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import android.widget.PopupMenu;
 
 
-public class ClienteActivity extends AppCompatActivity {
+public class ClienteActivity extends AppCompatActivity implements TokenManager.TokenExpirationListener {
     private DrawerLayout drawerLayout;
     private ImageButton btnMenu;
     List<CategoriaRequest> listaCategorias = new ArrayList<>();
@@ -81,6 +85,7 @@ public class ClienteActivity extends AppCompatActivity {
     MaterialButton btnLimpiar;
     String modo;
     ImageButton btnCarrito, btnFav, btnHome, btnUsuario;
+    private TokenManager tokenManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +105,18 @@ public class ClienteActivity extends AppCompatActivity {
                 this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        // Inicializar TokenManager
+        tokenManager = new TokenManager(this, this);
+
+        // Obtener token de SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", MODE_PRIVATE);
+        String token = sharedPreferences.getString("tokenJWT", "");
+
+        // Iniciar el timer
+        if (!token.isEmpty()) {
+            tokenManager.startTokenExpirationTimer(token);
+        }
 
         btnMenu = findViewById(R.id.btnMenu);
         btnMenu.setOnClickListener(new View.OnClickListener() {
@@ -806,6 +823,151 @@ public class ClienteActivity extends AppCompatActivity {
         } else {
             mostrarProductos();  // Muestra la pantalla principal de productos
         }
+    }
+
+    @Override
+    public void onTokenWarning(long timeRemaining) {
+        int minutesRemaining = (int) (timeRemaining / (1000 * 60));
+
+        new AlertDialog.Builder(this)
+                .setTitle("Sesión por expirar")
+                .setMessage("Tu sesión expirará en " + minutesRemaining + " minutos. ¿Deseas extender la sesión?")
+                .setPositiveButton("Sí", (dialog, which) -> {
+                    // Mostrar un progreso mientras se refresca el token
+                    ProgressDialog progressDialog = new ProgressDialog(this);
+                    progressDialog.setMessage("Extendiendo sesión...");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+
+                    // Llamar a refreshToken y manejar el progreso
+                    SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", MODE_PRIVATE);
+                    String currentToken = sharedPreferences.getString("tokenJWT", "");
+
+                    if (currentToken.isEmpty()) {
+                        progressDialog.dismiss();
+                        tokenManager.logout();
+                        return;
+                    }
+
+                    // Crear instancia de Retrofit
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl(getString(R.string.dominioservidor))
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+
+                    decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
+                    RefreshTokenRequest request = new RefreshTokenRequest(currentToken);
+
+                    Call<AuthResponse> call = api.refreshToken(request);
+                    call.enqueue(new Callback<AuthResponse>() {
+                        @Override
+                        public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                            progressDialog.dismiss();
+                            if (response.isSuccessful() && response.body() != null) {
+                                AuthResponse authResponse = response.body();
+                                String newToken = authResponse.getAccess_token();
+
+                                // Guardar el nuevo token
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("tokenJWT", newToken);
+                                editor.apply();
+
+                                // Reiniciar el timer con el nuevo token
+                                tokenManager.startTokenExpirationTimer(newToken);
+
+                                Toast.makeText(ClienteActivity.this,
+                                        "Sesión extendida exitosamente",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(ClienteActivity.this,
+                                        "No se pudo extender la sesión",
+                                        Toast.LENGTH_LONG).show();
+                                tokenManager.logout();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<AuthResponse> call, Throwable t) {
+                            progressDialog.dismiss();
+                            Toast.makeText(ClienteActivity.this,
+                                    "Error de red al extender la sesión",
+                                    Toast.LENGTH_LONG).show();
+                            tokenManager.logout();
+                        }
+                    });
+                })
+                .setNegativeButton("No", null)
+                .setCancelable(false)
+                .show();
+    }
+
+    @Override
+    public void onTokenExpired() {
+        Toast.makeText(this, "Tu sesión ha expirado", Toast.LENGTH_LONG).show();
+        tokenManager.logout();
+    }
+
+    private void refreshToken() {
+        SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", MODE_PRIVATE);
+        String currentToken = sharedPreferences.getString("tokenJWT", "");
+
+        if (currentToken.isEmpty()) {
+            tokenManager.logout();
+            return;
+        }
+
+        // Crear instancia de Retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(getString(R.string.dominioservidor))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
+        RefreshTokenRequest request = new RefreshTokenRequest(currentToken);
+
+        // Realizar la llamada para refrescar el token
+        Call<AuthResponse> call = api.refreshToken(request);
+        call.enqueue(new Callback<AuthResponse>() {
+            @Override
+            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    AuthResponse authResponse = response.body();
+                    String newToken = authResponse.getAccess_token();
+
+                    // Guardar el nuevo token
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("tokenJWT", newToken);
+                    editor.apply();
+
+                    // Reiniciar el timer con el nuevo token
+                    tokenManager.startTokenExpirationTimer(newToken);
+
+                    Toast.makeText(ClienteActivity.this,
+                            "Sesión extendida exitosamente",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    // Si falla el refresh, cerrar sesión
+                    Toast.makeText(ClienteActivity.this,
+                            "No se pudo extender la sesión",
+                            Toast.LENGTH_LONG).show();
+                    tokenManager.logout();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AuthResponse> call, Throwable t) {
+                Toast.makeText(ClienteActivity.this,
+                        "Error de red al extender la sesión",
+                        Toast.LENGTH_LONG).show();
+                tokenManager.logout();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        tokenManager.stopTimer();
     }
 }
 
