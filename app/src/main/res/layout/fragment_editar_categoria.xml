@@ -65,9 +65,38 @@
                     android:id="@+id/editTextImagen"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textUri" />
+                    android:inputType="textUri"
+                    android:visibility="gone"/>
             </com.google.android.material.textfield.TextInputLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="16dp">
 
+                <Button
+                    android:id="@+id/btnEditSeleccionarImagen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Seleccionar Imagen"
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/btnEditTomarFoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tomar foto" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/EditimageViewCategoria"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/default_image"
+                android:contentDescription="Imagen de la marca" />
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -83,21 +112,26 @@
                 android:layout_height="wrap_content"
                 android:hint="ID de la marca"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnEditar"
-                android:layout_width="89dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:text="Editar" />
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="16dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnVolver"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Volver"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEditar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="Editar" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnVolver"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Volver" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

@@ -1,6 +1,10 @@
 package com.example.decormicasa;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +37,7 @@ public class MarcasAdapter extends RecyclerView.Adapter<MarcasAdapter.MarcaViewH
     private Context context;
     private String token;
     private FragmentManager fragmentManager;
+
 
     public MarcasAdapter(List<MarcasRequest> marcas, decorMiCasaApi api, Context context, String token, FragmentManager fragmentManager) {
         this.marca = marcas;
@@ -60,14 +68,14 @@ public class MarcasAdapter extends RecyclerView.Adapter<MarcasAdapter.MarcaViewH
                     .load(imageUrl)
                     .placeholder(R.drawable.loading_image)
                     .error(R.drawable.default_image)
-                    .into(holder.imageProducto);
+                    .into(holder.imageMarca);
         } else {
             // Si la URL es nula, cargar una imagen por defecto
-            holder.imageProducto.setImageResource(R.drawable.default_image);
+            holder.imageMarca.setImageResource(R.drawable.default_image);
         }
 
 
-        holder.btnEliminar.setOnClickListener(v -> eliminarProducto(position, marca.getIdMarca()));
+        holder.btnEliminar.setOnClickListener(v -> eliminarMarca(position, marca.getIdMarca()));
         holder.btnEditar.setOnClickListener(v -> {
             EditarMarcaFragment editarFragment = EditarMarcaFragment.newInstance(marca);
 
@@ -85,9 +93,19 @@ public class MarcasAdapter extends RecyclerView.Adapter<MarcasAdapter.MarcaViewH
         return marca.size();
     }
 
-    private void eliminarProducto(int position, Integer idProducto) {
-        if (idProducto == null) {
+
+
+    private void eliminarMarca(int position, Integer idMarca) {
+        if (idMarca == null) {
             Toast.makeText(context, "ID del marca no válido", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Obtén el token desde SharedPreferences
+        SharedPreferences sharedPreferences = context.getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("tokenJWT", "");
+
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(context, "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -97,7 +115,7 @@ public class MarcasAdapter extends RecyclerView.Adapter<MarcasAdapter.MarcaViewH
                 .setMessage("¿Estás seguro de que deseas eliminar esta marca?")
                 .setPositiveButton("Sí", (dialog, which) -> {
                     // Si el usuario confirma, proceder con la eliminación
-                    Call<Void> call = api.eliminarMarca(idProducto);
+                    Call<Void> call = api.eliminarMarca("JWT " + token, idMarca);
                     call.enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
@@ -126,7 +144,7 @@ public class MarcasAdapter extends RecyclerView.Adapter<MarcasAdapter.MarcaViewH
     public static class MarcaViewHolder extends RecyclerView.ViewHolder {
         TextView textNombre, textPrecioCompra, textPrecioVenta, textDescripcion, imgTextView;
         ImageButton btnEliminar, btnEditar;
-        ImageView imageProducto;
+        ImageView imageMarca;
         public MarcaViewHolder(@NonNull View itemView) {
             super(itemView);
             textNombre = itemView.findViewById(R.id.textNombre);
@@ -135,7 +153,7 @@ public class MarcasAdapter extends RecyclerView.Adapter<MarcasAdapter.MarcaViewH
             imgTextView= itemView.findViewById(R.id.textImagen);
             btnEliminar = itemView.findViewById(R.id.btnEliminar);
             btnEditar = itemView.findViewById(R.id.btnEditar);
-            imageProducto = itemView.findViewById(R.id.imageProducto);
+            imageMarca = itemView.findViewById(R.id.imageMarca);
         }
     }
 }

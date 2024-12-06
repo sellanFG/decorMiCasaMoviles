@@ -68,25 +68,25 @@ public class CrudMarcasFragment extends Fragment {
             recyclerView.setAdapter(adapter);
         }
 
-        obtenerProductos(api, token);
+        obtenerMarcas(api, token);
 
-        AppCompatImageButton btnRegistrarProducto = view.findViewById(R.id.btnRegistrarProducto);
-        btnRegistrarProducto.setOnClickListener(v -> {
+        AppCompatImageButton btnRegistrarMarca = view.findViewById(R.id.btnRegistrarProducto);
+        btnRegistrarMarca.setOnClickListener(v -> {
             try {
                 requireActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new RegistrarMarcaFragment())
                         .addToBackStack(null)
                         .commit();
             } catch (Exception e) {
-                Log.e("CrudProductosFragment", "Error al abrir RegistrarProductoFragment", e);
-                Toast.makeText(getContext(), "Error al abrir el registro de producto", Toast.LENGTH_SHORT).show();
+                Log.e("CrudMarcasFragment", "Error al abrir RegistrarMarcaFragment", e);
+                Toast.makeText(getContext(), "Error al abrir el registro de marcas", Toast.LENGTH_SHORT).show();
             }
         });
         btnVolver.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
         return view;
     }
 
-    private void obtenerProductos(decorMiCasaApi api, String tokenJWT) {
+    private void obtenerMarcas(decorMiCasaApi api, String tokenJWT) {
         if (tokenJWT == null || tokenJWT.isEmpty()) {
             Toast.makeText(getContext(), "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
             return;
@@ -106,7 +106,7 @@ public class CrudMarcasFragment extends Fragment {
                     Toast.makeText(context, "Sesión expirada. Por favor, inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
                     context.startActivity(new Intent(context, LoginActivity.class));
                 } else {
-                    Toast.makeText(context, "Error al cargar productos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Error al cargar marcas", Toast.LENGTH_SHORT).show();
                 }
             }
 

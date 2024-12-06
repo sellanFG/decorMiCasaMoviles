@@ -73,8 +73,8 @@ public class CrudCategoriasFragment extends Fragment {
                         .addToBackStack(null)
                         .commit();
             } catch (Exception e) {
-                Log.e("CrudCategoriasFragment", "Error al abrir RegistrarProductoFragment", e);
-                Toast.makeText(getContext(), "Error al abrir el registro de producto", Toast.LENGTH_SHORT).show();
+                Log.e("CrudCategoriasFragment", "Error al abrir RegistrarCategoriasFragment", e);
+                Toast.makeText(getContext(), "Error al abrir el registro de categorias", Toast.LENGTH_SHORT).show();
             }
         });
 

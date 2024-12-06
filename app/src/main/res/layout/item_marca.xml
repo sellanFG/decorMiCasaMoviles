@@ -33,7 +33,7 @@
 
     </LinearLayout>
     <ImageView
-        android:id="@+id/imageProducto"
+        android:id="@+id/imageMarca"
         android:layout_width="80dp"
         android:layout_height="80dp"
 
