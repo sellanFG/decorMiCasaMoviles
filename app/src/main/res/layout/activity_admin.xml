@@ -102,7 +102,7 @@
         android:id="@+id/gridOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:columnCount="2"
+        android:columnCount="3"
         android:padding="16dp"
         android:rowCount="2">
 
@@ -149,5 +149,16 @@
             android:backgroundTint="@color/colorEmpleados"
             android:textColor="@color/black"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCompras"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="100dp"
+            android:layout_height="261dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:backgroundTint="@color/switch_thumb"
+            android:text="@string/compras"
+            android:textColor="@color/black" />
     </GridLayout>
 </LinearLayout>

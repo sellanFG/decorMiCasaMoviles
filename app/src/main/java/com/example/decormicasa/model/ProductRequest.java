@@ -1,4 +1,5 @@
 package com.example.decormicasa.model;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -76,5 +77,10 @@ public class ProductRequest implements Serializable {
         this.caracteristicas = caracteristicas;
         this.usos = usos;
         this.idMarca = idMarca;
+    }
+
+    @Override
+    public String toString() {
+        return nombre; // Aquí decides cómo quieres representar el producto
     }
 }

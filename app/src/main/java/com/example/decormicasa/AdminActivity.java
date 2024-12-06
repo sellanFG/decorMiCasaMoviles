@@ -26,6 +26,7 @@ public class AdminActivity extends AppCompatActivity {
         // Inicialización de vistas
         MaterialButton btnProductos = findViewById(R.id.btnProductos);
         MaterialButton btnEmpleado = findViewById(R.id.btnEmpleados);
+        MaterialButton btnCompras = findViewById(R.id.btnCompras);
         View gridOptions = findViewById(R.id.gridOptions);
         View fragmentContainer = findViewById(R.id.fragment_container);
         btnUsuario = findViewById(R.id.btnUsuario);  // Botón de usuario
@@ -61,6 +62,16 @@ public class AdminActivity extends AppCompatActivity {
             transaction.commit();
         });
 
+        btnCompras.setOnClickListener(v -> {
+            Log.d(TAG, "Botón de productos clickeado");
+            gridOptions.setVisibility(View.GONE);
+            fragmentContainer.setVisibility(View.VISIBLE);
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, new CrudComprasFragment());
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
 
         // Listener para cambios en la pila de fragmentos (back stack)
         getSupportFragmentManager().addOnBackStackChangedListener(() -> {

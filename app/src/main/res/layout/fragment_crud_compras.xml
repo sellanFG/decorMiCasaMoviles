@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- RecyclerView para mostrar las compras -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewCompras"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingBottom="16dp" />
+
+    <!-- Contenedor para los botones de registro (Horizontal) -->
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <!-- Botón Registrar Producto Nuevo -->
+        <Button
+            android:id="@+id/btnRegistrarNuevoProducto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Nuevo Producto"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_button"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp" />
+
+        <!-- Botón Registrar Producto Registrado -->
+        <Button
+            android:id="@+id/btnRegistrarProductoRegistrado"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Producto Existente"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_button"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp" />
+
+    </LinearLayout>
+
+    <!-- Botón Volver -->
+    <Button
+        android:id="@+id/btnVolver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Volver"
+        android:textColor="@android:color/white"
+        android:background="@drawable/rounded_button"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>

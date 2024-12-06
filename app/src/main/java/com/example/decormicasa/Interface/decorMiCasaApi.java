@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import com.example.decormicasa.model.AuthRequest;
 import com.example.decormicasa.model.AuthResponse;
 import com.example.decormicasa.model.CategoriaRequest;
+import com.example.decormicasa.model.ComprasRequest;
 import com.example.decormicasa.model.MarcaRequest;
 import com.example.decormicasa.model.MarcasRequest;
 import com.example.decormicasa.model.PedidoRequest;
@@ -116,4 +117,18 @@ public interface decorMiCasaApi {
 
     @DELETE("eliminar_empleado/{id}")
     Call<Void> eliminarEmpleado(@Header("Authorization") String token, @Path("id") int id);
+
+    @POST("registrar_compra")
+    Call<Void> registrarCompra(@Header("Authorization") String authorization, @Body ComprasRequest comprasRequest);
+
+    @PUT("editar_compra/{idCompra}")
+    Call<Void> editarCompra(@Header("Authorization") String authorization,@Path("idCompra") int idCompra,@Body ComprasRequest comprasRequest);
+
+    @DELETE("eliminar_compra/{idCompra}")
+    Call<Void> eliminarCompra(@Header("Authorization") String authorization,@Path("idCompra") int idCompra);
+
+    @GET("obtener_compras")
+    Call<List<ComprasRequest>> obtenerCompras(@Header("Authorization") String authorization);
+
+
 }
