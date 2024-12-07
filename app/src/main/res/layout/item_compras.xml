@@ -47,6 +47,15 @@
             android:textSize="14sp"
             android:layout_marginTop="4dp"/>
 
+        <TextView
+            android:id="@+id/tvCantidad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cantidad Comprada: 0"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"/>
+
         <!-- Descripción de la Compra -->
         <TextView
             android:id="@+id/tvDescripcionCompra"

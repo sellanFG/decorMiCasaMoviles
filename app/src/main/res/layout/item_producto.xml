@@ -27,13 +27,7 @@
             android:textStyle="bold"
             android:textColor="@color/primaryBlue" />
 
-        <!-- Precio de Compra -->
-        <TextView
-            android:id="@+id/textPrecioCompra"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Precio de Compra: $0.0"
-            android:textColor="@color/black" />
+
 
         <!-- Precio de Venta -->
         <TextView

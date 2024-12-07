@@ -43,7 +43,6 @@ public class RegistrarCompraNuevoFragment extends Fragment {
         etProveedor = view.findViewById(R.id.etProveedor);
         etDescripcionCompra = view.findViewById(R.id.etDescripcionCompra);
 
-        etImagen = view.findViewById(R.id.etImagen);
         etCaracteristicas = view.findViewById(R.id.etCaracteristicas);
         etUsos = view.findViewById(R.id.etUsos);
         etIdMarca = view.findViewById(R.id.etIdMarca);

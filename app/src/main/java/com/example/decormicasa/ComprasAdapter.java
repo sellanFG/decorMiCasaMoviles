@@ -38,6 +38,7 @@ public class ComprasAdapter extends RecyclerView.Adapter<ComprasAdapter.ComprasV
         holder.tvProducto.setText("Producto Comprado: " + compra.getNombre());
         holder.tvProveedor.setText("Proveedor: " + compra.getProveedor());
         holder.tvPrecioCompra.setText("Precio Compra: $" + compra.getPrecioCompra());
+        holder.tvCantidad.setText("Cantidad Comprada: " + compra.getCantidad());
         holder.tvDescripcion.setText("Descripción: " + compra.getDescripcionCompra());
     }
 
@@ -48,7 +49,7 @@ public class ComprasAdapter extends RecyclerView.Adapter<ComprasAdapter.ComprasV
     }
 
     public static class ComprasViewHolder extends RecyclerView.ViewHolder {
-        TextView tvProducto, tvProveedor, tvPrecioCompra, tvDescripcion, tvFecha;
+        TextView tvProducto, tvProveedor, tvPrecioCompra, tvDescripcion, tvCantidad;
 
         public ComprasViewHolder(View itemView) {
             super(itemView);
@@ -56,6 +57,8 @@ public class ComprasAdapter extends RecyclerView.Adapter<ComprasAdapter.ComprasV
             tvProveedor = itemView.findViewById(R.id.tvProveedor);
             tvPrecioCompra = itemView.findViewById(R.id.tvPrecioCompra);
             tvDescripcion = itemView.findViewById(R.id.tvDescripcionCompra);
+            tvCantidad = itemView.findViewById(R.id.tvCantidad);
+
         }
     }
 }

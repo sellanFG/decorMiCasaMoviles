@@ -51,7 +51,6 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
         ProductRequest producto = productos.get(position);
 
         holder.textNombre.setText(producto.getNombre());
-        holder.textPrecioCompra.setText("Precio de Compra: $" + producto.getPrecioCompra());
         holder.textPrecioVenta.setText("Precio de Venta: $" + producto.getPrecioVenta());
         holder.textDescripcion.setText(producto.getDescripcion());
 
@@ -133,7 +132,6 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
         public ProductoViewHolder(@NonNull View itemView) {
             super(itemView);
             textNombre = itemView.findViewById(R.id.textNombre);
-            textPrecioCompra = itemView.findViewById(R.id.textPrecioCompra);
             textPrecioVenta = itemView.findViewById(R.id.textPrecioVenta);
             textDescripcion = itemView.findViewById(R.id.textDescripcion);
             imageProducto = itemView.findViewById(R.id.imageProducto);

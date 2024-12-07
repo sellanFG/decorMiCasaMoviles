@@ -58,17 +58,7 @@
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- URL de la imagen -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="URL de la imagen">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etImagen"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textUri" />
-        </com.google.android.material.textfield.TextInputLayout>
+
 
         <!-- ID de la marca -->
         <com.google.android.material.textfield.TextInputLayout
