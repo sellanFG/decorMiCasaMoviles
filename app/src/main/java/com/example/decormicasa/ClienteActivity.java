@@ -548,7 +548,7 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
 
                         @Override
                         public void onFailure(@NonNull Call<PreferenceRequest> call, @NonNull Throwable t) {
-                            Toast.makeText(ClienteActivity.this, "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+
                             Log.e("ERROR", t.getMessage());
                         }
                     });
@@ -664,7 +664,7 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
         decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
 
         if (token == null || token.isEmpty()) {
-            Toast.makeText(ClienteActivity.this, "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_SHORT).show();
+
             return;
         }
 
@@ -683,13 +683,13 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
                     actvCategoria.setAdapter(adapter);
 
                 } else {
-                    Toast.makeText(ClienteActivity.this, "Error al cargar categorias", Toast.LENGTH_SHORT).show();
+
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<CategoriaRequest>> call, @NonNull Throwable t) {
-                Toast.makeText(ClienteActivity.this, "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+
             }
         });
     }
@@ -707,7 +707,7 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
         decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
 
         if (token == null || token.isEmpty()) {
-            Toast.makeText(ClienteActivity.this, "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
+
             return;
         }
 
@@ -727,14 +727,14 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
                     actvMarca.setAdapter(adapter);
 
                 } else {
-                    Toast.makeText(ClienteActivity.this, "Error al cargar marcas", Toast.LENGTH_SHORT).show();
+
 
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<MarcaRequest>> call, @NonNull Throwable t) {
-                Toast.makeText(ClienteActivity.this, "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+
                 Log.e("ERROR", "onResponse: "+t.getMessage());
             }
         });
@@ -746,7 +746,7 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
         String token = sharedPreferences.getString("tokenJWT", "");
 
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Sesión expirada. Por favor, inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
+
             return;
         }
 
@@ -770,13 +770,13 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
                     recyclerViewPedidos.setLayoutManager(new LinearLayoutManager(ClienteActivity.this));
                     recyclerViewPedidos.setAdapter(adapter);
                 } else {
-                    Toast.makeText(ClienteActivity.this, "Error al cargar los pedidos.", Toast.LENGTH_SHORT).show();
+
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<PedidoRequest>> call, @NonNull Throwable t) {
-                Toast.makeText(ClienteActivity.this, "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+
             }
         });
     }
@@ -799,7 +799,7 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
         decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
 
         if (token == null || token.isEmpty()) {
-            Toast.makeText(ClienteActivity.this, "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
+
             return;
         }
 
@@ -843,14 +843,14 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
                         txtAviso.setVisibility(View.GONE);
                     }
                 } else {
-                    Toast.makeText(ClienteActivity.this, "Error al cargar productos", Toast.LENGTH_SHORT).show();
+
 
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<ProductoClienteRequest>> call, @NonNull Throwable t) {
-                Toast.makeText(ClienteActivity.this, "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+
                 Log.e("ERROR", "onResponse: "+t.getMessage());
             }
         });
@@ -923,7 +923,7 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
     decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
 
     if (token == null || token.isEmpty()) {
-        Toast.makeText(ClienteActivity.this, "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
+
         return;
     }
 
@@ -932,7 +932,7 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
         @Override
         public void onResponse(@NonNull Call<PedidoRequest> call, @NonNull Response<PedidoRequest> response) {
             if (response.isSuccessful() && response.body() != null) {
-                Toast.makeText(ClienteActivity.this, "Pedido guardado correctamente", Toast.LENGTH_SHORT).show();
+
                 productoClienteAdapter.carrito.clear();
                 productoClienteAdapter.notifyDataSetChanged();
                 mostrarProductos();
@@ -943,7 +943,7 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
 
         @Override
         public void onFailure(@NonNull Call<PedidoRequest> call, @NonNull Throwable t) {
-            Toast.makeText(ClienteActivity.this, "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+
             Log.e("ERROR", t.getMessage());
         }
     });
@@ -1031,7 +1031,7 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
 
     @Override
     public void onTokenExpired() {
-        Toast.makeText(this, "Tu sesión ha expirado", Toast.LENGTH_LONG).show();
+
         tokenManager.logout();
     }
 

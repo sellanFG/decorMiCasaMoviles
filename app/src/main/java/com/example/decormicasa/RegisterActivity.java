@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -20,19 +21,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.Task;
+import com.google.mlkit.vision.face.Face;
+import com.google.mlkit.vision.face.FaceDetection;
+import com.google.mlkit.vision.face.FaceDetector;
+import com.google.mlkit.vision.face.FaceDetectorOptions;
+import com.google.mlkit.vision.common.InputImage;
+
 import com.example.decormicasa.login.LoginActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private static final int CAMERA_REQUEST_CODE = 100;
     private static final int STORAGE_PERMISSION_CODE = 101;
     private static final int CAMERA_PERMISSION_CODE = 102;
-
+    // Definir las claves para las SharedPreferences
+    private static final String PREFS_NAME = "UserPrefs";
+    private static final String KEY_EMAIL = "email";
+    private static final String KEY_PASSWORD = "password";
     private EditText nameEditText, emailEditText, passwordEditText, addressEditText, phoneEditText;
     private Button registerButton, backButton, takePhotoButton;
     private ImageView profileImageView;  // Cambié el nombre aquí para coincidir con el ID en el XML
@@ -71,11 +83,15 @@ public class RegisterActivity extends AppCompatActivity {
             String address = addressEditText.getText().toString().trim();
             String phone = phoneEditText.getText().toString().trim();
 
-            if (name.isEmpty() || email.isEmpty() || password.isEmpty() || address.isEmpty() || phone.isEmpty()) {
-                Toast.makeText(this, "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show();
-            } else if (userPhoto == null) {
-                Toast.makeText(this, "Debes tomar una foto", Toast.LENGTH_SHORT).show();
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "El correo y la contraseña son obligatorios", Toast.LENGTH_SHORT).show();
             } else {
+                // Guardar en SharedPreferences
+                SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(KEY_EMAIL, email);
+                editor.putString(KEY_PASSWORD, password);
+                editor.apply(); // Guardar los cambios
                 saveImageToLocal(userPhoto); // Guardar en almacenamiento privado
                 saveImageToMediaStore(userPhoto); // Guardar en galería
                 Toast.makeText(this, "Registro completado exitosamente", Toast.LENGTH_SHORT).show();
@@ -88,6 +104,13 @@ public class RegisterActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+        // Solicitar permisos si son necesarios
+        requestStoragePermissions();
+        requestCameraPermissions();
+
+        // Botón para tomar foto
+        takePhotoButton.setOnClickListener(v -> openCamera());
+        
     }
 
     private void openCamera() {
@@ -109,6 +132,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void saveImageToLocal(Bitmap bitmap) {
+        // Guardar la imagen
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         if (storageDir != null && !storageDir.exists()) {
             storageDir.mkdirs();
@@ -120,11 +144,36 @@ public class RegisterActivity extends AppCompatActivity {
         try (FileOutputStream fos = new FileOutputStream(imageFile)) {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
+            // Detectar la cara y guardar las características faciales
+            detectFace(bitmap);
             Toast.makeText(this, "Imagen guardada en: " + imageFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(this, "Error al guardar la imagen", Toast.LENGTH_SHORT).show();
         }
+    }
+    private void detectFace(Bitmap bitmap) {
+        InputImage image = InputImage.fromBitmap(bitmap, 0);
+
+        FaceDetectorOptions options = new FaceDetectorOptions.Builder()
+                .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
+                .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
+                .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
+                .build();
+
+        FaceDetector detector = FaceDetection.getClient(options);
+
+        Task<List<Face>> result = detector.process(image)
+                .addOnSuccessListener(faces -> {
+                    if (!faces.isEmpty()) {
+                        Face face = faces.get(0);
+                        // Guardar las características faciales
+                        float leftEyeOpenProb = face.getLeftEyeOpenProbability();
+                        float rightEyeOpenProb = face.getRightEyeOpenProbability();
+                        // Aquí puedes guardar estos valores en una base de datos o archivo
+                    }
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Error al detectar cara", Toast.LENGTH_SHORT).show());
     }
 
     private void saveImageToMediaStore(Bitmap bitmap) {

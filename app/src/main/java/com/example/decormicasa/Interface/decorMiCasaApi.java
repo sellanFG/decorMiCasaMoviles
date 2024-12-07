@@ -38,7 +38,7 @@ import retrofit2.http.Path;
 
 public interface decorMiCasaApi {
 
-    @POST("auth")
+    @POST("auths")
     Call<AuthResponse> autenticar(@Body AuthRequest authRequest);
 
 
