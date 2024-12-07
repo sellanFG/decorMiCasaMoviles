@@ -4,7 +4,6 @@ public class ComprasRequest {
     private String idProducto; // Opcional para un producto nuevo
     private String nombre; // Solo para un producto nuevo
     private String descripcion; // Solo para un producto nuevo
-    private String imagen; // Opcional, predeterminada si no se envía
     private String caracteristicas; // Opcional, solo para un producto nuevo
     private String usos; // Opcional, solo para un producto nuevo
     private int idMarca; // Solo para un producto nuevo
@@ -14,12 +13,11 @@ public class ComprasRequest {
     private String descripcionCompra; // Opcional
 
     // Constructor principal
-    public ComprasRequest(String idProducto, String nombre, String descripcion, String imagen, String caracteristicas,
+    public ComprasRequest(String idProducto, String nombre, String descripcion, String caracteristicas,
                           String usos, int idMarca, int cantidad, double precioCompra, String proveedor, String descripcionCompra) {
         this.idProducto = idProducto;
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.imagen = imagen;
         this.caracteristicas = caracteristicas;
         this.usos = usos;
         this.idMarca = idMarca;
@@ -31,13 +29,13 @@ public class ComprasRequest {
 
     // Constructor para productos existentes
     public ComprasRequest(String idProducto, int cantidad, double precioCompra, String proveedor, String descripcionCompra) {
-        this(idProducto, null, null, null, null, null, 0, cantidad, precioCompra, proveedor, descripcionCompra);
+        this(idProducto, null, null, null, null, 0, cantidad, precioCompra, proveedor, descripcionCompra);
     }
 
     // Constructor para productos nuevos
-    public ComprasRequest(String nombre, String descripcion, String imagen, String caracteristicas, String usos,
+    public ComprasRequest(String nombre, String descripcion, String caracteristicas, String usos,
                           int idMarca, int cantidad, double precioCompra, String proveedor, String descripcionCompra) {
-        this(null, nombre, descripcion, imagen, caracteristicas, usos, idMarca, cantidad, precioCompra, proveedor, descripcionCompra);
+        this(null, nombre, descripcion, caracteristicas, usos, idMarca, cantidad, precioCompra, proveedor, descripcionCompra);
     }
 
     // Getters y setters
@@ -65,13 +63,6 @@ public class ComprasRequest {
         this.descripcion = descripcion;
     }
 
-    public String getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
-    }
 
     public String getCaracteristicas() {
         return caracteristicas;

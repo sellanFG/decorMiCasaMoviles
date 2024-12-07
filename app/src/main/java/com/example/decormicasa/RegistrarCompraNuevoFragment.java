@@ -62,8 +62,7 @@ public class RegistrarCompraNuevoFragment extends Fragment {
         String proveedor = etProveedor.getText().toString();
         String descripcionCompra = etDescripcionCompra.getText().toString();
 
-        // Nuevos campos
-        String imagen = "https//img.com";
+
         String caracteristicas = etCaracteristicas.getText().toString();
         String usos = etUsos.getText().toString();
         String idMarcaStr = etIdMarca.getText().toString();
@@ -82,10 +81,9 @@ public class RegistrarCompraNuevoFragment extends Fragment {
         ComprasRequest comprasRequest = new ComprasRequest(
                 nombreProducto,
                 descripcionProducto,
-                imagen, // Imagen proporcionada por el usuario
-                caracteristicas, // Características proporcionadas por el usuario
-                usos, // Usos proporcionados por el usuario
-                idMarca, // ID de la marca proporcionada por el usuario
+                caracteristicas,
+                usos,
+                idMarca,
                 cantidad,
                 precioCompra,
                 proveedor,
