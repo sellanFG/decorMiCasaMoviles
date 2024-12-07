@@ -138,13 +138,7 @@ public class EditarMarcaFragment extends Fragment {
         }
 
     }
-    /*private void mostrarImagenSeleccionada(Uri uri) {
-        Glide.with(requireContext())
-                .load(uri)
-                .placeholder(R.drawable.loading_image)
-                .error(R.drawable.default_image)
-                .into(imageViewMarca);
-    }*/
+
     // Configurar launcher para seleccionar imagen de la galería
     private void configurarSeleccionarImagenLauncher() {
         seleccionarImagenLauncher = registerForActivityResult(
@@ -206,6 +200,8 @@ public class EditarMarcaFragment extends Fragment {
         String descripcion = editTextDescripcion.getText().toString();
         Integer idCategoria = Integer.parseInt(editTextIdCategoria.getText().toString());
         String imagenUrl = editTextImagen.getText().toString();
+        //String imagenUrl = editTextImagen.getText().toString();
+
         // Si hay una nueva imagen seleccionada o tomada, subirla y usar la nueva URL
         if (imagenSeleccionadaUri != null) {
             subirImagenYActualizarMarca(nombre, descripcion, idCategoria, id);
