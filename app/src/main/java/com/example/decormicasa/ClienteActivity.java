@@ -564,7 +564,7 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
                 public void onProviderDisabled(@NonNull String provider) {}
             });
         } catch (SecurityException e) {
-            e.printStackTrace();
+            Toast.makeText(this, "Habilitar ubicación en el dispositivo", Toast.LENGTH_SHORT).show();
         }
     }
 }
