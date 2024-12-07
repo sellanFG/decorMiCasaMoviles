@@ -87,8 +87,8 @@ public class TokenManager {
             timer.cancel();
         }
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences sharedPref = context.getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
         editor.clear();
         editor.apply();
         // Redirigir al login

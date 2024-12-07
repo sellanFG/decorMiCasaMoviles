@@ -114,16 +114,13 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
         tokenManager = new TokenManager(this, this);
 
         // Obtener token de SharedPreferences
-        SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", MODE_PRIVATE);
-        String token = sharedPreferences.getString("tokenJWT", "");
+        SharedPreferences sharedPref = getSharedPreferences("decorMiCasa", MODE_PRIVATE);
+        String token = sharedPref.getString("tokenJWT", "");
 
         // Iniciar el timer
         if (!token.isEmpty()) {
             tokenManager.startTokenExpirationTimer(token);
         }
-
-
-
 
         SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -166,17 +163,6 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
                 Log.d("SharedPreferences", "No se encontró ninguna preferencia guardada.");
             }
         }
-
-
-
-
-
-
-
-
-
-
-
 
         btnMenu = findViewById(R.id.btnMenu);
         btnMenu.setOnClickListener(new View.OnClickListener() {
