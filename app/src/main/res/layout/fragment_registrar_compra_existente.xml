@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Spinner para seleccionar producto -->
+    <Spinner
+        android:id="@+id/spinnerProductos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- Campo para cantidad -->
+    <EditText
+        android:id="@+id/etCantidad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Cantidad"
+        android:inputType="number" />
+
+    <!-- Campo para precio de compra -->
+    <EditText
+        android:id="@+id/etPrecioCompra"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Precio de compra"
+        android:inputType="numberDecimal" />
+
+    <!-- Campo para proveedor -->
+    <EditText
+        android:id="@+id/etProveedor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Proveedor" />
+
+    <!-- Campo para descripción de compra -->
+    <EditText
+        android:id="@+id/etDescripcionCompra"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Descripción de compra" />
+
+    <!-- Botón para registrar compra -->
+    <Button
+        android:id="@+id/btnRegistrarCompra"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Registrar Compra" />
+
+</LinearLayout>

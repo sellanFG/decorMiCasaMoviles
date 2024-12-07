@@ -1,11 +1,15 @@
 package com.example.decormicasa;
 
+import static java.security.AccessController.getContext;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -17,12 +21,15 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
@@ -37,6 +44,7 @@ import com.example.decormicasa.login.LoginActivity;
 import com.example.decormicasa.model.CategoriaRequest;
 import com.example.decormicasa.model.MarcaRequest;
 import com.example.decormicasa.model.PedidoRequest;
+import com.example.decormicasa.model.PreferenceRequest;
 import com.example.decormicasa.model.ProductoClienteRequest;
 import com.example.decormicasa.utils.TokenManager;
 import com.google.android.material.button.MaterialButton;
@@ -45,7 +53,11 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -109,6 +121,62 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
         if (!token.isEmpty()) {
             tokenManager.startTokenExpirationTimer(token);
         }
+
+
+
+
+        SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String ultimaPreferencia = sharedPreferences.getString("ultima_preferencia", null);
+
+        // Obtener el URI retornado del navegador embebido
+        String backUrl = getIntent().getDataString();
+        if (backUrl != null) {
+            Uri uri = Uri.parse(backUrl);
+            String status = uri.getQueryParameter("status");
+            //verificar que sea success para guardar en la bd
+            if (ultimaPreferencia != null) {
+                if ("success".equals(status)) {
+                    try {
+                        JSONObject jsonData = new JSONObject(ultimaPreferencia);
+                        // Extraer valores
+                        int id_cliente = jsonData.getInt("id_cliente");
+                        double total = jsonData.getDouble("total");
+                        double igv = jsonData.getDouble("igv");
+                        String metodoPago = jsonData.getString("metodoPago");
+                        JSONArray detalleVenta = jsonData.getJSONArray("detalleVenta");
+                        String detalleVentaString = detalleVenta.toString();
+
+                        // Mostrar los valores en el Logcat
+                        Log.d("SharedPreferences", "ID Cliente: " + id_cliente);
+                        Log.d("SharedPreferences", "Total: " + total);
+                        Log.d("SharedPreferences", "IGV: " + igv);
+                        Log.d("SharedPreferences", "Método de Pago: " + metodoPago);
+                        Log.d("SharedPreferences", "Detalle Venta: " + detalleVenta.toString());
+                        guardarPedido(metodoPago, id_cliente, total, igv, detalleVentaString);
+                        editor.remove("ultima_preferencia");
+                        editor.apply();
+                    } catch (JSONException e) {
+                        Log.e("SharedPreferences", "Error al procesar JSON: " + e.getMessage());
+                    }
+                }else{
+                    Toast.makeText(ClienteActivity.this, "Error al procesar el pago", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Log.d("SharedPreferences", "No se encontró ninguna preferencia guardada.");
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
 
         btnMenu = findViewById(R.id.btnMenu);
         btnMenu.setOnClickListener(new View.OnClickListener() {
@@ -275,6 +343,7 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
                     }
                 });
 
+                //guardar pedido y pago
                 btnGuardarPedido.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -285,7 +354,10 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
                         btnGuardarPedido.setBackgroundColor(getResources().getColor(R.color.primaryBlueDesactivado));
                         btnGuardarPedido.setClickable(false);
 
-                        guardarPedido(actvMetodoPago.getText().toString(), dialog, btnGuardarPedido);
+                        //llamar preference
+                        obtenerPreference(actvMetodoPago.getText().toString());
+
+                        //guardarPedido(actvMetodoPago.getText().toString(), dialog, btnGuardarPedido);
 
                     }
                 });
@@ -408,6 +480,81 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
                 return false;
             });
             popupMenu.show();
+        });
+    }
+
+    private void obtenerPreference(String metodoPago) {
+        SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(getString(R.string.dominioservidor))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
+
+        //Obtener el id del cliente
+        int id_cliente = sharedPreferences.getInt("id_cliente", 0);
+        double total = productoClienteAdapter.calcularTotales()[2];
+        double igv = productoClienteAdapter.calcularTotales()[1];
+        //generar el detalle de venta en JSON
+        JSONArray jsonArrayDetalleVenta = new JSONArray();
+        for(ProductoClienteRequest producto: productoClienteAdapter.carrito){
+            jsonArrayDetalleVenta.put(producto.getJSONObjectProducto());
+        }
+        String detalleVentaJSON = jsonArrayDetalleVenta.toString();
+
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        //guardar en shared preferences para guardar la venta en bd enc aso de ser success
+        JSONObject jsonData = new JSONObject();
+        try {
+            jsonData.put("id_cliente", id_cliente);
+            jsonData.put("total", total);
+            jsonData.put("igv", igv);
+            jsonData.put("metodoPago", metodoPago);
+            jsonData.put("detalleVenta", new JSONArray(detalleVentaJSON));
+
+            // Guardar el JSON como String en SharedPreferences
+            editor.putString("ultima_preferencia", jsonData.toString());
+            editor.apply();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        Call<PreferenceRequest> call = api.obtenerPreferencia(id_cliente, total, igv,metodoPago, detalleVentaJSON);
+        call.enqueue(new Callback<PreferenceRequest>() {
+            @Override
+            public void onResponse(@NonNull Call<PreferenceRequest> call, @NonNull Response<PreferenceRequest> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    PreferenceRequest preferenceRequest = response.body();
+                    //link de mercado pago
+                    String initPoint = preferenceRequest.getData().getInitPoint();
+                    //Log.d("InitPoint", "Init Point: " + initPoint);
+                    //Toast.makeText(ClienteActivity.this, "Init Point: " + initPoint, Toast.LENGTH_LONG).show();
+
+                    if (initPoint != null && !initPoint.isEmpty()) {
+                        // Abrir el link de Mercado Pago en un navegador
+                        CustomTabsIntent intent = new CustomTabsIntent.Builder()
+                                .build();
+                        intent.launchUrl(ClienteActivity.this, Uri.parse(initPoint));
+                    }else{
+                        Toast.makeText(ClienteActivity.this, "No hay init", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+                    Toast.makeText(ClienteActivity.this, "Response failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<PreferenceRequest> call, @NonNull Throwable t) {
+                //btnGuardarPedido.setBackgroundColor(getResources().getColor(R.color.primaryBlue));
+                //btnGuardarPedido.setClickable(true);
+                Toast.makeText(ClienteActivity.this, "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e("ERROR", t.getMessage());
+            }
         });
     }
 
@@ -698,7 +845,62 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
         });
     }
 
-    void guardarPedido(String metodoPago, Dialog dialog, MaterialButton btnGuardarPedido){
+//    void guardarPedido(String metodoPago, Dialog dialog, MaterialButton btnGuardarPedido){
+//        SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+//        String token = sharedPreferences.getString("tokenJWT", "");
+//
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(getString(R.string.dominioservidor))
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
+//
+//        if (token == null || token.isEmpty()) {
+//            Toast.makeText(ClienteActivity.this, "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
+//            return;
+//        }
+//
+//        //Obtener el id del cliente
+//        int id_cliente = sharedPreferences.getInt("id_cliente", 0);
+//        double total = productoClienteAdapter.calcularTotales()[2];
+//        double igv = productoClienteAdapter.calcularTotales()[1];
+//        //generar el detalle de venta en JSON
+//        JSONArray jsonArrayDetalleVenta = new JSONArray();
+//        for(ProductoClienteRequest producto: productoClienteAdapter.carrito){
+//            jsonArrayDetalleVenta.put(producto.getJSONObjectProducto());
+//        }
+//        String detalleVentaJSON = jsonArrayDetalleVenta.toString();
+//
+//
+//        Call<PedidoRequest> call = api.guardarpedido("JWT " + token, id_cliente, total, igv, metodoPago, detalleVentaJSON);
+//        call.enqueue(new Callback<PedidoRequest>() {
+//            @Override
+//            public void onResponse(@NonNull Call<PedidoRequest> call, @NonNull Response<PedidoRequest> response) {
+//                btnGuardarPedido.setBackgroundColor(getResources().getColor(R.color.primaryBlue));
+//                btnGuardarPedido.setClickable(true);
+//                if (response.isSuccessful() && response.body() != null) {
+//                    Toast.makeText(ClienteActivity.this, "Pedido guardado correctamente", Toast.LENGTH_SHORT).show();
+//                    productoClienteAdapter.carrito.clear();
+//                    productoClienteAdapter.notifyDataSetChanged();
+//                    mostrarProductos();
+//                    dialog.dismiss();
+//                } else {
+//                    Toast.makeText(ClienteActivity.this, "Error al guardar pedido", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(@NonNull Call<PedidoRequest> call, @NonNull Throwable t) {
+//                btnGuardarPedido.setBackgroundColor(getResources().getColor(R.color.primaryBlue));
+//                btnGuardarPedido.setClickable(true);
+//                Toast.makeText(ClienteActivity.this, "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+//                Log.e("ERROR", t.getMessage());
+//            }
+//        });
+//    }
+
+    void guardarPedido(String metodoPago, int id_cliente, double total, double igv, String detalleVentaJSON){
         SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("tokenJWT", "");
 
@@ -714,30 +916,16 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
             return;
         }
 
-        //Obtener el id del cliente
-        int id_cliente = sharedPreferences.getInt("id_cliente", 0);
-        double total = productoClienteAdapter.calcularTotales()[2];
-        double igv = productoClienteAdapter.calcularTotales()[1];
-        //generar el detalle de venta en JSON
-        JSONArray jsonArrayDetalleVenta = new JSONArray();
-        for(ProductoClienteRequest producto: productoClienteAdapter.carrito){
-            jsonArrayDetalleVenta.put(producto.getJSONObjectProducto());
-        }
-        String detalleVentaJSON = jsonArrayDetalleVenta.toString();
-
 
         Call<PedidoRequest> call = api.guardarpedido("JWT " + token, id_cliente, total, igv, metodoPago, detalleVentaJSON);
         call.enqueue(new Callback<PedidoRequest>() {
             @Override
             public void onResponse(@NonNull Call<PedidoRequest> call, @NonNull Response<PedidoRequest> response) {
-                btnGuardarPedido.setBackgroundColor(getResources().getColor(R.color.primaryBlue));
-                btnGuardarPedido.setClickable(true);
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(ClienteActivity.this, "Pedido guardado correctamente", Toast.LENGTH_SHORT).show();
                     productoClienteAdapter.carrito.clear();
                     productoClienteAdapter.notifyDataSetChanged();
                     mostrarProductos();
-                    dialog.dismiss();
                 } else {
                     Toast.makeText(ClienteActivity.this, "Error al guardar pedido", Toast.LENGTH_SHORT).show();
                 }
@@ -745,8 +933,6 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
 
             @Override
             public void onFailure(@NonNull Call<PedidoRequest> call, @NonNull Throwable t) {
-                btnGuardarPedido.setBackgroundColor(getResources().getColor(R.color.primaryBlue));
-                btnGuardarPedido.setClickable(true);
                 Toast.makeText(ClienteActivity.this, "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
                 Log.e("ERROR", t.getMessage());
             }

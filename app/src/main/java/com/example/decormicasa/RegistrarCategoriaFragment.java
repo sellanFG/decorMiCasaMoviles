@@ -149,10 +149,7 @@ public class RegistrarCategoriaFragment extends Fragment {
             Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
             return;
         }
-        /*if (!imagen.startsWith("http://") && !imagen.startsWith("https://")) {
-            Toast.makeText(requireContext(), "Ingrese un enlace válido para la imagen, por ejemplo: https://imagen.jpg", Toast.LENGTH_SHORT).show();
-            return;
-        }*/
+
         try {
             InputStream inputStream = requireContext().getContentResolver().openInputStream(imagenSeleccionadaUri);
             byte[] bytes = new byte[inputStream.available()];

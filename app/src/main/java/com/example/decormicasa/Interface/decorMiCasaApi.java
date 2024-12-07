@@ -5,10 +5,12 @@ import androidx.annotation.Nullable;
 import com.example.decormicasa.model.AuthRequest;
 import com.example.decormicasa.model.AuthResponse;
 import com.example.decormicasa.model.CategoriaRequest;
+import com.example.decormicasa.model.ComprasRequest;
 import com.example.decormicasa.model.ImagenResponse;
 import com.example.decormicasa.model.MarcaRequest;
 import com.example.decormicasa.model.MarcasRequest;
 import com.example.decormicasa.model.PedidoRequest;
+import com.example.decormicasa.model.PreferenceRequest;
 import com.example.decormicasa.model.ProductRequest;
 import com.example.decormicasa.model.User;
 import com.example.decormicasa.model.UserResponse;
@@ -97,6 +99,15 @@ public interface decorMiCasaApi {
                                       @Field("detalleVenta") String detalleVenta
     );
 
+    @FormUrlEncoded
+    @POST("api_preferencia")
+    Call<PreferenceRequest> obtenerPreferencia(@Field("id_cliente") int idCliente,
+                                               @Field("total") double total,
+                                               @Field("igv") double igv,
+                                               @Field("metodoPago") String metodoPago,
+                                               @Field("detalleVenta") String detalleVenta
+    );
+
     @GET("obtener_usuario/{id}")
     Call<JsonObject> obtenerUsuario(@Header("Authorization") String token, @Path("id") int id);
 
@@ -120,6 +131,21 @@ public interface decorMiCasaApi {
 
     @DELETE("eliminar_empleado/{id}")
     Call<Void> eliminarEmpleado(@Header("Authorization") String token, @Path("id") int id);
+
+    @POST("registrar_compra")
+    Call<Void> registrarCompra(@Header("Authorization") String authorization, @Body ComprasRequest comprasRequest);
+
+    @PUT("editar_compra/{idCompra}")
+    Call<Void> editarCompra(@Header("Authorization") String authorization,@Path("idCompra") int idCompra,@Body ComprasRequest comprasRequest);
+
+    @DELETE("eliminar_compra/{idCompra}")
+    Call<Void> eliminarCompra(@Header("Authorization") String authorization,@Path("idCompra") int idCompra);
+
+    @GET("obtener_compras")
+    Call<List<ComprasRequest>> obtenerCompras(@Header("Authorization") String authorization);
+
+
+
 
     // Método para cargar imágenes (subir imágenes)
     @Multipart

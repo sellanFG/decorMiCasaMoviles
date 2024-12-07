@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 public class ProductoClienteAdapter extends RecyclerView.Adapter<ProductoClienteAdapter.ViewHolder>{
-    private Context context; //Sirve para enlazar el Adapter con el Fragment
+    private Context context;
     private List<ProductoClienteRequest> listaProducto;
     public List<ProductoClienteRequest> carrito = new ArrayList<>();
 
