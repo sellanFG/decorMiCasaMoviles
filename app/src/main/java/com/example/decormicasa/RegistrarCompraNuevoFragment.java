@@ -26,7 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RegistrarCompraNuevoFragment extends Fragment {
 
     private EditText etNombreProducto, etDescripcionProducto, etCantidad, etPrecioCompra, etProveedor, etDescripcionCompra;
-    private EditText etImagen, etCaracteristicas, etUsos, etIdMarca; // Nuevos campos para imagen, características, usos y marca
+    private EditText  etCaracteristicas, etUsos, etIdMarca; // Nuevos campos para imagen, características, usos y marca
     private Button btnRegistrarCompra;
 
     public RegistrarCompraNuevoFragment() {}
@@ -63,7 +63,7 @@ public class RegistrarCompraNuevoFragment extends Fragment {
         String descripcionCompra = etDescripcionCompra.getText().toString();
 
         // Nuevos campos
-        String imagen = etImagen.getText().toString();
+        String imagen = "https//img.com";
         String caracteristicas = etCaracteristicas.getText().toString();
         String usos = etUsos.getText().toString();
         String idMarcaStr = etIdMarca.getText().toString();
