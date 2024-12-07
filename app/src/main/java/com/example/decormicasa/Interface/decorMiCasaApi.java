@@ -96,7 +96,8 @@ public interface decorMiCasaApi {
                                       @Field("total") double total,
                                       @Field("igv") double igv,
                                       @Field("metodoPago") String metodoPago,
-                                      @Field("detalleVenta") String detalleVenta
+                                      @Field("detalleVenta") String detalleVenta,
+                                      @Field("ubicacion") String ubicacion
     );
 
     @FormUrlEncoded
@@ -105,7 +106,8 @@ public interface decorMiCasaApi {
                                                @Field("total") double total,
                                                @Field("igv") double igv,
                                                @Field("metodoPago") String metodoPago,
-                                               @Field("detalleVenta") String detalleVenta
+                                               @Field("detalleVenta") String detalleVenta,
+                                               @Field("ubicacion") String ubicacion
     );
 
     @GET("obtener_usuario/{id}")
