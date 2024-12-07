@@ -116,9 +116,15 @@ public class RegistrarCompraNuevoFragment extends Fragment {
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
                             Toast.makeText(getContext(), "Compra y producto registrado exitosamente", Toast.LENGTH_SHORT).show();
-                            getActivity().onBackPressed();
+                            // Quitar este fragmento de la pila y volver al anterior
+                            requireActivity().getSupportFragmentManager().popBackStack();
                         } else {
-                            Toast.makeText(getContext(), "Error al registrar la compra", Toast.LENGTH_SHORT).show();
+                            try {
+                                String errorBody = response.errorBody().string();
+                                Toast.makeText(getContext(), "Error del servidor: " + errorBody, Toast.LENGTH_LONG).show();
+                            } catch (Exception e) {
+                                Toast.makeText(getContext(), "Error desconocido del servidor", Toast.LENGTH_LONG).show();
+                            }
                         }
                     }
 

@@ -145,13 +145,13 @@ public class RegistrarCompraExistenteFragment extends Fragment {
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
                             Toast.makeText(getContext(), "Compra registrada exitosamente", Toast.LENGTH_SHORT).show();
+                            // Quitar este fragmento de la pila y volver al anterior
+                            requireActivity().getSupportFragmentManager().popBackStack();
                         } else {
                             try {
-                                // Leer el cuerpo del error del servidor
                                 String errorBody = response.errorBody().string();
                                 Log.e("Error Servidor", errorBody);
                                 Toast.makeText(getContext(), "Error del servidor: " + errorBody, Toast.LENGTH_LONG).show();
-                                getActivity().onBackPressed();
                             } catch (Exception e) {
                                 Log.e("Error Parsing", "Error al leer el cuerpo de error", e);
                                 Toast.makeText(getContext(), "Error desconocido del servidor", Toast.LENGTH_LONG).show();
