@@ -30,9 +30,20 @@
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
+
         <activity
             android:name=".ClienteActivity"
-            android:exported="false" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Configurar deep link -->
+                <data android:scheme="decor" android:host="cliente" />
+            </intent-filter>
+        </activity>
+
+
         <activity
             android:name=".AdminActivity"
             android:exported="false" />

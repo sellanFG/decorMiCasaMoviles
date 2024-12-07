@@ -10,6 +10,7 @@ import com.example.decormicasa.model.ImagenResponse;
 import com.example.decormicasa.model.MarcaRequest;
 import com.example.decormicasa.model.MarcasRequest;
 import com.example.decormicasa.model.PedidoRequest;
+import com.example.decormicasa.model.PreferenceRequest;
 import com.example.decormicasa.model.ProductRequest;
 import com.example.decormicasa.model.User;
 import com.example.decormicasa.model.UserResponse;
@@ -96,6 +97,15 @@ public interface decorMiCasaApi {
                                       @Field("igv") double igv,
                                       @Field("metodoPago") String metodoPago,
                                       @Field("detalleVenta") String detalleVenta
+    );
+
+    @FormUrlEncoded
+    @POST("api_preferencia")
+    Call<PreferenceRequest> obtenerPreferencia(@Field("id_cliente") int idCliente,
+                                               @Field("total") double total,
+                                               @Field("igv") double igv,
+                                               @Field("metodoPago") String metodoPago,
+                                               @Field("detalleVenta") String detalleVenta
     );
 
     @GET("obtener_usuario/{id}")

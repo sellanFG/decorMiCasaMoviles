@@ -56,5 +56,7 @@ dependencies {
     implementation (libs.play.services.location)
     //paea el usuario*
     implementation ("com.google.android.material:material:1.9.0") // Usa la última versión estable
+    //mercado pago
+    implementation("androidx.browser:browser:1.4.0")
 
 }
