@@ -162,22 +162,7 @@ public class RegistrarMarcaFragment extends Fragment {
             Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
             return;
         }
-
-
-        /*if (!imagen.startsWith("http://") && !imagen.startsWith("https://")) {
-            Toast.makeText(requireContext(), "Ingrese un enlace válido para la imagen, por ejemplo: https://imagen.jpg", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString("tokenJWT", "");
-
-        if (token == null || token.isEmpty()) {
-            Toast.makeText(requireContext(), "Token no disponible. Inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
-            return;
-        }*/
-
         try {
-
             // Leer el contenido de la URI directamente
             InputStream inputStream = requireContext().getContentResolver().openInputStream(imagenSeleccionadaUri);
             byte[] bytes = new byte[inputStream.available()];
@@ -185,12 +170,9 @@ public class RegistrarMarcaFragment extends Fragment {
             inputStream.close();
             // Generar un nombre único para la imagen
             String nombreArchivoUnico = "marca_" + System.currentTimeMillis() + ".jpg";
-
-
             // Crear el RequestBody usando el contenido del archivo
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), bytes);
             MultipartBody.Part body = MultipartBody.Part.createFormData("file", nombreArchivoUnico, requestFile);
-
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(requireContext().getString(R.string.dominioservidor))
@@ -241,10 +223,6 @@ public class RegistrarMarcaFragment extends Fragment {
 
         MarcasRequest nuevaMarca = new MarcasRequest(nombre, descripcion, idCategoria, urlImagen);
 
-        /*if (!imagen.startsWith("http://") && !imagen.startsWith("https://")) {
-            Toast.makeText(requireContext(), "Ingrese un enlace válido para la imagen, por ejemplo: https://imagen.jpg", Toast.LENGTH_SHORT).show();
-            return;
-        }*/
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("tokenJWT", "");
 

@@ -138,13 +138,7 @@ public class EditarMarcaFragment extends Fragment {
         }
 
     }
-    /*private void mostrarImagenSeleccionada(Uri uri) {
-        Glide.with(requireContext())
-                .load(uri)
-                .placeholder(R.drawable.loading_image)
-                .error(R.drawable.default_image)
-                .into(imageViewMarca);
-    }*/
+
     // Configurar launcher para seleccionar imagen de la galería
     private void configurarSeleccionarImagenLauncher() {
         seleccionarImagenLauncher = registerForActivityResult(
