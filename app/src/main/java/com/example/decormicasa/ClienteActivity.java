@@ -7,6 +7,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -59,6 +61,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
@@ -67,6 +70,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import retrofit2.Call;
@@ -741,45 +745,70 @@ public class ClienteActivity extends AppCompatActivity implements TokenManager.T
     }
 
     void mostrarPedidos() {
-        List<PedidoRequest> pedidos = new ArrayList<>();
-        SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString("tokenJWT", "");
+    List<PedidoRequest> pedidos = new ArrayList<>();
+    SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
+    String token = sharedPreferences.getString("tokenJWT", "");
 
-        if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Sesión expirada. Por favor, inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
-            return;
+    if (token == null || token.isEmpty()) {
+        Toast.makeText(this, "Sesión expirada. Por favor, inicie sesión nuevamente.", Toast.LENGTH_LONG).show();
+        return;
+    }
+
+    Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(getString(R.string.dominioservidor))
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+
+    decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
+    Call<List<PedidoRequest>> call = api.obtenerPedidos("JWT " + token);
+
+    call.enqueue(new Callback<List<PedidoRequest>>() {
+        @Override
+        public void onResponse(@NonNull Call<List<PedidoRequest>> call, @NonNull Response<List<PedidoRequest>> response) {
+            if (response.isSuccessful() && response.body() != null) {
+                pedidos.clear();
+                pedidos.addAll(response.body());
+
+                for (PedidoRequest pedido : pedidos) {
+                    String ubicacion = pedido.getUbicacion();
+                    if (ubicacion != null && !ubicacion.isEmpty()) {
+                        String[] latLng = ubicacion.split(",");
+                        double latitude = Double.parseDouble(latLng[0]);
+                        double longitude = Double.parseDouble(latLng[1]);
+                        String direccion = obtenerDireccion(latitude, longitude);
+                        pedido.setDireccion(direccion);
+                    }
+                }
+
+                RecyclerView recyclerViewPedidos = findViewById(R.id.recyclerViewPedidos);
+                PedidosAdapter adapter = new PedidosAdapter(pedidos, ClienteActivity.this);
+                recyclerViewPedidos.setLayoutManager(new LinearLayoutManager(ClienteActivity.this));
+                recyclerViewPedidos.setAdapter(adapter);
+            } else {
+                Toast.makeText(ClienteActivity.this, "Error al cargar los pedidos.", Toast.LENGTH_SHORT).show();
+            }
         }
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(getString(R.string.dominioservidor))
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        @Override
+        public void onFailure(@NonNull Call<List<PedidoRequest>> call, @NonNull Throwable t) {
+            Toast.makeText(ClienteActivity.this, "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    });
+}
 
-        decorMiCasaApi api = retrofit.create(decorMiCasaApi.class);
-        Call<List<PedidoRequest>> call = api.obtenerPedidos("JWT " + token);
-
-        call.enqueue(new Callback<List<PedidoRequest>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<PedidoRequest>> call, @NonNull Response<List<PedidoRequest>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    pedidos.clear();
-                    pedidos.addAll(response.body());
-
-                    RecyclerView recyclerViewPedidos = findViewById(R.id.recyclerViewPedidos);
-                    PedidosAdapter adapter = new PedidosAdapter(pedidos, ClienteActivity.this);
-                    recyclerViewPedidos.setLayoutManager(new LinearLayoutManager(ClienteActivity.this));
-                    recyclerViewPedidos.setAdapter(adapter);
-                } else {
-                    Toast.makeText(ClienteActivity.this, "Error al cargar los pedidos.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<PedidoRequest>> call, @NonNull Throwable t) {
-                Toast.makeText(ClienteActivity.this, "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+private String obtenerDireccion(double latitude, double longitude) {
+    Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+    try {
+        List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+        if (addresses != null && !addresses.isEmpty()) {
+            Address address = addresses.get(0);
+            return address.getAddressLine(0);
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+    return "Dirección no disponible";
+}
 
     void mostrarProductos(){
         layoutFiltros.setVisibility(View.VISIBLE);

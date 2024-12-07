@@ -8,14 +8,17 @@ public class PedidoRequest {
     private Double igv; // Puede ser null
     private String estado;
     private int idUsuarios;
+    private String ubicacion;
+    private String direccion;
 
-    public PedidoRequest(int idPedido, String fechaPedido, double total, Double igv, String estado, int idUsuarios) {
+    public PedidoRequest(int idPedido, String fechaPedido, double total, Double igv, String estado, int idUsuarios, String ubicacion) {
         this.idPedido = idPedido;
         this.fechaPedido = fechaPedido;
         this.total = total;
         this.igv = igv;
         this.estado = estado;
         this.idUsuarios = idUsuarios;
+        this.ubicacion = ubicacion;
     }
 
     public PedidoRequest() {
@@ -67,6 +70,22 @@ public class PedidoRequest {
 
     public void setIdUsuarios(int idUsuarios) {
         this.idUsuarios = idUsuarios;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
     @Override
