@@ -35,7 +35,5 @@ viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version = "1.
 carouselview = { group = "com.synnapps", name = "carouselview", version = "0.1.5" }
 
 
-
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-

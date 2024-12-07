@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     id("androidx.navigation.safeargs")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -54,9 +55,18 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation (libs.play.services.maps)
     implementation (libs.play.services.location)
+    // sms firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation ("com.google.firebase:firebase-appcheck-playintegrity:17.1.1")
+    implementation ("com.google.firebase:firebase-appcheck:17.1.1")
+    implementation ("com.google.firebase:firebase-appcheck-debug:17.1.1")  // Solo para desarrollo
     //paea el usuario*
     implementation ("com.google.android.material:material:1.9.0") // Usa la última versión estable
     //mercado pago
     implementation("androidx.browser:browser:1.4.0")
+
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 
 }

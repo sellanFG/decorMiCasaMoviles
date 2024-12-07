@@ -46,6 +46,7 @@ import com.example.decormicasa.model.MarcaRequest;
 import com.example.decormicasa.model.PedidoRequest;
 import com.example.decormicasa.model.PreferenceRequest;
 import com.example.decormicasa.model.ProductoClienteRequest;
+import com.example.decormicasa.utils.TokenManager;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
@@ -73,7 +74,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import android.widget.PopupMenu;
 
 
-public class ClienteActivity extends AppCompatActivity {
+public class ClienteActivity extends AppCompatActivity implements TokenManager.TokenExpirationListener {
     private DrawerLayout drawerLayout;
     private ImageButton btnMenu;
     List<CategoriaRequest> listaCategorias = new ArrayList<>();
@@ -88,6 +89,7 @@ public class ClienteActivity extends AppCompatActivity {
     MaterialButton btnLimpiar;
     String modo;
     ImageButton btnCarrito, btnFav, btnHome, btnUsuario;
+    private TokenManager tokenManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,8 +110,17 @@ public class ClienteActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        // Inicializar TokenManager
+        tokenManager = new TokenManager(this, this);
 
+        // Obtener token de SharedPreferences
+        SharedPreferences sharedPref = getSharedPreferences("decorMiCasa", MODE_PRIVATE);
+        String token = sharedPref.getString("tokenJWT", "");
 
+        // Iniciar el timer
+        if (!token.isEmpty()) {
+            tokenManager.startTokenExpirationTimer(token);
+        }
 
         SharedPreferences sharedPreferences = getSharedPreferences("decorMiCasa", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -152,17 +163,6 @@ public class ClienteActivity extends AppCompatActivity {
                 Log.d("SharedPreferences", "No se encontró ninguna preferencia guardada.");
             }
         }
-
-
-
-
-
-
-
-
-
-
-
 
         btnMenu = findViewById(R.id.btnMenu);
         btnMenu.setOnClickListener(new View.OnClickListener() {
@@ -987,6 +987,34 @@ public class ClienteActivity extends AppCompatActivity {
         } else {
             mostrarProductos();  // Muestra la pantalla principal de productos
         }
+    }
+
+    @Override
+    public void onTokenWarning(long timeRemaining) {
+        int minutesRemaining = (int) (timeRemaining / (1000 * 60));
+
+        new android.app.AlertDialog.Builder(this)
+                .setTitle("Sesión por expirar")
+                .setMessage("Tu sesión expirará en " + minutesRemaining + " minutos.")
+                .setNegativeButton("Cerrar sesión", (dialog, which) -> {
+                    // Cerrar sesión automáticamente
+                    tokenManager.logout();
+                })
+                .setCancelable(true)
+                .create() // Crea el AlertDialog
+                .show(); // Muestra el diálogo
+    }
+
+    @Override
+    public void onTokenExpired() {
+        Toast.makeText(this, "Tu sesión ha expirado", Toast.LENGTH_LONG).show();
+        tokenManager.logout();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        tokenManager.stopTimer();
     }
 }
 
